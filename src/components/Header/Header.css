@@ -1,0 +1,139 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 74px;
+    max-width: 1280px;
+    border-bottom: 1px dashed red;
+    transition: 0.3s;
+}
+.header__them_light{
+    background: #FAFAFA;
+}
+.header__them_dark{
+    background: #DDDEE3;
+}
+.header__wrapp{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.account{
+    align-content: flex-end;
+    display: flex;
+    flex-direction: row;
+    height: 32px;
+    min-width: 100px;
+    box-sizing: border-box;
+    border: 2px solid #AAAAAA;
+    border-radius: 50px;
+     /* opacity: 20%; */
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.account__logo{
+    width: 12px;
+    height: 14px;
+    padding-right: 7px;
+}
+
+.button__login {
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    background-color: #3456F3;
+    height: 32px;
+    width: 76px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    text-align: center;
+    border: 0;
+    cursor: pointer;
+}
+.button__login:hover{
+    opacity: 0.8;
+}
+
+.link{
+    font-family: 'Inter', 'Arial', sans-serif;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0;
+    padding-bottom: 0;
+    margin-left: 16px;
+}
+.link:hover{
+    opacity: 0.7;
+}
+
+.link__movies{
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    padding-bottom: 4px;
+}
+.link__movies_active{
+    font-weight: 500;
+    cursor: default;
+}
+.link__movies_active:hover{
+    opacity: 1;
+}
+
+.registration{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0px;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0;
+    padding-bottom: 0;
+    
+}
+.registration:hover{
+    opacity: 0.7;
+}
+
+@media screen and (max-width: 768px) {
+    .header{
+        padding-left: 30px;
+        padding-right: 30px;
+        transition: 0.3s;
+    }
+    .link__movies_active{
+        font-weight: 400;
+        box-sizing: border-box;
+        padding-bottom: 2px;
+        border-bottom: 2px solid black;
+    }  
+}
+
+@media screen and (max-width: 320px) {
+    .header{
+        padding-left: 14px;
+        padding-right: 14px;
+        transition: 0.3s;
+    }
+    .button__login{
+        width: 54px;
+        height: 26px;
+        font-size: 10px;
+    }
+    .registration{
+        font-size: 10px;
+    }
+}
