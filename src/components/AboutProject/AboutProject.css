@@ -1,8 +1,149 @@
 .project{
     display: flex;
-    background-color: #DDDEE3;
-    flex-direction: row;
+    background-color: #FAFAFA;
+    flex-direction: column;
     padding-top: 75px;
     padding-bottom: 50px;
     border-bottom: 1px dashed red;
+}
+.project__container1{
+    display: grid;
+    width: 100%;
+    padding: 70px 0 20px 0;
+    margin: 0px;
+    gap: 26px;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "TITLE1 TITLE2"
+      "TEXT1 TEXT2";
+}
+.project__subtitle{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    color: black;
+    text-align: left;
+    padding: 0;
+    margin: 0px;
+}
+.project__subtitle_box1{
+    grid-area: TITLE1;
+}
+.project__subtitle_box2{
+    grid-area: TITLE2;
+}
+.project__text{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    color: black;
+    min-height: 100px;
+    text-align: left;
+    padding: 0px;
+    margin: 0px;
+}
+.project__text_box1{
+    grid-area: TEXT1;
+}
+.project__text_box2{
+    grid-area: TEXT2;
+}
+
+.project__container2{
+    display: grid;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    gap: 14px;
+    grid-template-rows: 36px 17px;
+    grid-template-columns: 1fr 4fr;
+    grid-template-areas:
+      "TIME1 TIME2"
+      "SUBJ1 SUBJ2";
+}
+.project__week{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 34px;
+    color: black;
+    text-align: center;
+    padding: 0px 4px 0px 4px;
+    margin: 0px;
+    white-space: nowrap;
+}
+.project__week_box1{
+    grid-area: TIME1;
+    color: white;
+    background-color: #3456F3;
+}
+.project__week_box2{
+    grid-area: TIME2;
+    background-color: #F2F2F2;
+
+}
+
+.project__subj{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 17px;
+    color: #A0A0A0;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    white-space: nowrap;
+}
+.project__subj_box1{
+    grid-area: SUBJ1; 
+}
+.project__subj_box2{
+    grid-area: SUBJ2; 
+}
+
+@media screen and (max-width: 768px){
+    .project{
+        padding-top: 65px;
+        padding-bottom: 40px;
+    }
+    .project__text{
+        font-size: 12px;
+    }
+    .project__container2{
+        column-gap: 0px;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .project{
+        padding-top: 45px;
+        padding-bottom: 20px;
+    }
+    .project__container1{
+        grid-template-rows: auto;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        grid-template-areas:
+          "TITLE1"
+          "TEXT1"
+          "TITLE2"
+          "TEXT2";
+    }
+    .project__container2{
+        grid-template-rows: 35px 13px;
+    }
+    .project__week{
+        font-size: 11px;
+        padding: 0px 3px 0px 3px;
+    }
+    .project__subj{
+        font-size: 11px;
+    }
 }

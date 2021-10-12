@@ -7,15 +7,28 @@ import Hamburger from '../Hamburger/Hamburger'
 import logo_account from '../../images/logo_account.svg';
 // import { Route, Link, Switch } from "react-router-dom";
 
-function Header({them, email}) {
+function Header({email}) {
     return (   
             <Switch>
                 <Route exact path='/'>
-                    <header className="body header header__them_dark">
+                    <header className='body header header__them_dark'>
                         <Landing></Landing>
                         <div className="account">
                             <img className="account__logo" src={logo_account} alt="Пользователь"/>
+                            <Link to='/not-registered'>
                             <p>{email}</p>
+                            </Link>
+                            
+                        </div>
+                        <Hamburger></Hamburger>
+                    </header>
+                </Route>
+                <Route path='/not-registered'>
+                    <header className="body header header__them_dark">
+                        <Landing></Landing>
+                        <div className="header__registration">
+                            <Link className="registration" to='/signin'>Регистрация</Link>
+                            <Link className="button__login" type="button" to='/'>Войти</Link>
                         </div>
                         <Hamburger></Hamburger>
                     </header>
@@ -43,6 +56,21 @@ function Header({them, email}) {
                             </Link>
                             <Link className="link link__movies" to='movies'>Фильмы</Link>
                             <p className="link link__movies link__movies_active">Сохраненные фильмы</p>
+                        </div>
+                        <div className="account">
+                            <img className="account__logo" src={logo_account} alt="Пользователь"/>
+                            <p>{email}</p>
+                        </div>
+                    </header>          
+                </Route>
+                <Route path='/profile'>
+                    <header className="body header header__them_light">
+                        <div className="header__wrapp">
+                            <Link to=''>
+                                <Landing></Landing>
+                            </Link>
+                            <Link className="link link__movies" to='movies'>Фильмы</Link>
+                            <p className="link link__movies">Сохраненные фильмы</p>
                         </div>
                         <div className="account">
                             <img className="account__logo" src={logo_account} alt="Пользователь"/>
