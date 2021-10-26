@@ -15,6 +15,8 @@ function Profile({email}) {
                 <p className="profile__field">E-mail</p>
                 <input type="text" className="profile__input" value={email}/>
             </div>
+            <p className="profile__edit">Редактировать</p>
+            <p className="profile__exit">Выйти из аккаунта</p>
         </div>        
     );
 }    

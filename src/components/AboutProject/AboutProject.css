@@ -4,7 +4,6 @@
     flex-direction: column;
     padding-top: 75px;
     padding-bottom: 50px;
-    border-bottom: 1px dashed red;
 }
 .project__container1{
     display: grid;

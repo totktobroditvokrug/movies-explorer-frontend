@@ -4,7 +4,6 @@
     flex-direction: row;
     padding-top: 75px;
     padding-bottom: 50px;
-    border-bottom: 1px dashed red;
 }
 .promo_wrapp{
     display: flex;

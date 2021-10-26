@@ -49,3 +49,49 @@
     margin: 0;
     padding: 0;
 }
+
+.profile__edit{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 220px;
+    margin-bottom: 16px;
+    transition: 0.5s;
+}
+
+.profile__exit{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    text-align: center;
+    color: #EE3465;
+    margin-bottom: 70px;
+    transition: 0.5s;
+}
+
+@media screen and (max-width: 770px){
+    .profile__edit{
+        transition: 0.5s;
+        margin-top: 210px;
+    }
+    .profile__exit{
+        transition: 0.5s;
+        margin-bottom: 269px;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .profile__edit{
+        transition: 0.5s;
+        margin-top: 379px;
+        font-size: 12px;
+    }
+    .profile__exit{
+        transition: 0.5s;
+        margin-bottom: 40px;
+        font-size: 12px;
+    }
+}
