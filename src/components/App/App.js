@@ -4,7 +4,7 @@ import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
 import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound"
-// import Login from './Login';
+import Login from '../Login/Login';
 // import Register from './Register';
 import { Route, useHistory, Switch, Redirect } from 'react-router-dom';
 
@@ -15,35 +15,47 @@ const email = 'nnnnnnn@nj.jhc';
 function App() {
   return (
 <div>
-  <Header
-    email={email}
-  />
   <Switch>
     <Route exact path='/'>
+      <Header
+        email={email}
+      />
       <Main>
       </Main>
       <Footer/>
     </Route>
     <Route path='/not-registered'>
+      <Header
+        email={email}
+      />
       <Main>
       </Main>
       <Footer/>
     </Route>
     <Route path='/movies'>
+      <Header
+        email={email}
+      />
       <p>страница поиска фильмов</p>
       <Footer/>             
     </Route>
     <Route path='/saved-movies'>
+      <Header
+        email={email}
+      />
       <p>страница сохраненных фильмов</p>
       <Footer/>       
     </Route>
     <Route path='/signup'>
-      <p>страница авторизации</p>
-    </Route>
-    <Route path='/signin'>
       <p>страница регистрации</p>
     </Route>
+    <Route path='/signin'>
+      <Login/>
+    </Route>
     <Route path='/profile'>
+      <Header
+        email={email}
+      />
       <Profile email={email}></Profile>
     </Route>
     <Route path="*">
@@ -53,7 +65,7 @@ function App() {
     {/*
   <Main/>
   
-  <Login/>
+ 
   <Register/> */
   }
 

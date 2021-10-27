@@ -92,9 +92,9 @@ function Header({email}) {
                             </Route>
                             <Route path='/profile'>
                                     <div className={`header__wrapp ${isMenuOpen ? "header__wrapp_on" : ""}`}>
-                                        <Link className="link link__movies" to=''>Главная</Link>
+                                        <Link className={`${isMenuOpen ? "link link__movies" : "link_off"}`} to=''>Главная</Link>
                                         <Link className="link link__movies" to='movies'>Фильмы</Link>
-                                        <p className="link link__movies">Сохраненные фильмы</p>
+                                        <Link className="link link__movies" to='saved-movies'>Сохраненные фильмы</Link>
                                     </div>
                                     <div className={`account ${isMenuOpen ? "account_on" : ""}`}>
                                         <img className="account__logo" src={logo_account} alt="Пользователь"/>
