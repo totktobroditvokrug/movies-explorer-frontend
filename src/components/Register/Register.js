@@ -1,46 +1,49 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import PageWithForm from "../PageWithForm/PageWithForm";
+import '../Form/Form.css';
 
-function Register(
-//     {
-//     registerData // прокинуть объект для авторизации в App
-// }
-) {
+function Register({}) {
 
-//   const [password, setPassword] = React.useState('');
-//   const [email, setEmail] = React.useState('');
-
-//   function handlePasswordChange(event) {
-//     setPassword(event.target.value)
-//   }
-//   function handleEmailChange(event) {
-//     setEmail(event.target.value)
-//   }
-
-//   function handleSubmit(event){
-//     event.preventDefault();
-//     registerData({ email, password });
-//  }
-
-  return (
-    
-      <form className="log-in" onSubmit={handleSubmit}>
-        <h2 className="log-in__title">Регистрация</h2>
-        <label className="log-in__wrapp-input">
-          <input className="log-in__input" type="email" name="email" id="email"  placeholder="введите e-mail" required
-            onChange={handleEmailChange} 
-          />
-        </label>
-        <label className="log-in__wrapp-input">
-          <input className="log-in__input" type="password" name="password" id="password"  placeholder="пароль не менее 8 символов" required
-            onChange={handlePasswordChange} 
-          />
-        </label>
-        <button className="log-in__button" type="submit">Зарегистрироваться</button>
-        <Link className="log-in__link" to="/sign-in">Уже зарегистрированы? Войти</Link>
-      </form>
-
-  )
-}
-
-export default Register;
+    return (
+      <div>
+        <PageWithForm
+          title='Добро пожаловать!'
+          name='register'
+          buttonText='Зарегистрироваться'
+          linkAbout='Уже зарегистрированы?'
+          linkText='Войти'
+          link='signin'
+        >
+            <label className='form__label'>
+                E-mail
+            </label>
+            <input
+              className='form__input'
+              type='url'
+              name='email'
+              id='user-email'
+              placeholder='Введите E-mail'
+              required
+            />
+            <span className='form__error' id='user-email-error'>
+              тут что-то про ошибку емэйла
+            </span>
+            <label className='form__label'>
+                E-mail
+            </label>
+            <input
+              className='form__input'
+              type='password'
+              name='password'
+              id='user-password'
+              placeholder='Введите пароль'
+              required
+            />
+            <span className='form__error' id='user-password-error'>
+              тут что-то про ошибку пароля
+            </span>
+        </PageWithForm>
+      </div>
+    );
+  }
+  
+  export default Register;

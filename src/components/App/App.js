@@ -5,7 +5,7 @@ import Footer from "../Footer/Footer";
 import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound"
 import Login from '../Login/Login';
-// import Register from './Register';
+import Register from '../Register/Register';
 import { Route, useHistory, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
@@ -47,7 +47,7 @@ function App() {
       <Footer/>       
     </Route>
     <Route path='/signup'>
-      <p>страница регистрации</p>
+      <Register/>
     </Route>
     <Route path='/signin'>
       <Login/>

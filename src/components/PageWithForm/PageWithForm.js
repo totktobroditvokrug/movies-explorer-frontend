@@ -33,9 +33,9 @@ function PageWithForm({
             {buttonText}
           </button>
         </form>
-        <div>
+        <div className="form__footer">
           <p className="form__edit">{linkAbout}</p>
-          <Link className="form__exit" to={link}>{linkText}</Link>
+          <Link className="form__link" to={link}>{linkText}</Link>
         </div>
       </div>
   );

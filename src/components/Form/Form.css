@@ -60,6 +60,37 @@
 .form__error_underline{
     border-bottom: 1px solid #E8E8E8;
 }
+.form__footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 16px;
+}
+.form__link{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0;
+    padding-bottom: 0;
+    margin-left: 16px;
+    color: #3456F3;
+}
+.form__link:hover{
+    opacity: 0.7;
+}
+.form__edit{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    margin: 0;
+    padding-bottom: 0;
+    margin-left: 0px;
+    color: #A0A0A0;
+}
 
 @media screen and (max-width: 770px){
 
