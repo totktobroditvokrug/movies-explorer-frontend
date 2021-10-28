@@ -10,6 +10,7 @@ function PageWithForm({
   buttonText,
   linkAbout,
   linkText,
+  link,
   children,
 }) {
   return (
@@ -32,6 +33,10 @@ function PageWithForm({
             {buttonText}
           </button>
         </form>
+        <div>
+          <p className="form__edit">{linkAbout}</p>
+          <Link className="form__exit" to={link}>{linkText}</Link>
+        </div>
       </div>
   );
 }
