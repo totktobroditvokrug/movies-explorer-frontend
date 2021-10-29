@@ -1,7 +1,7 @@
 import PageWithForm from "../PageWithForm/PageWithForm";
 import '../Form/Form.css';
 
-function Login({}) {
+function Login() {
 
     return (
       <div>
@@ -12,7 +12,6 @@ function Login({}) {
           linkAbout='Ещё не зарегистрированы?'
           linkText='Регистрация'
           link='signup'
-          buttonText={"Войти"}
         >
             <label className='form__label'>
                 E-mail

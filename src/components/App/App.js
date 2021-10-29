@@ -9,6 +9,7 @@ import Register from '../Register/Register';
 import { Route, useHistory, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
+import Movies from '../Movies/Movies';
 
 const email = 'nnnnnnn@nj.jhc';
 
@@ -36,14 +37,14 @@ function App() {
       <Header
         email={email}
       />
-      <p>страница поиска фильмов</p>
+      <Movies/>
       <Footer/>             
     </Route>
     <Route path='/saved-movies'>
       <Header
         email={email}
       />
-      <p>страница сохраненных фильмов</p>
+      <Movies/>
       <Footer/>       
     </Route>
     <Route path='/signup'>

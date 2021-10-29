@@ -32,6 +32,10 @@
     white-space: nowrap;
     overflow: hidden;
 }
+.form__input_error{
+    color: #EE3465;
+
+}
 .form__label{
     font-family: 'Inter', 'Arial', sans-serif;
     font-size: 10px;
