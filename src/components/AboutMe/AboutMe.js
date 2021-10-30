@@ -16,11 +16,11 @@ function AboutMe() {
                     <ul className="me__links">
                         <li>
                             <a href="https://www.facebook.com/" 
-                            target="_blank" rel="noreferrer" class="me__link">Facebook</a>
+                            target="_blank" rel="noreferrer" className="me__link">Facebook</a>
                         </li>
                         <li>
                             <a href="https://github.com/totktobroditvokrug"
-                            target="_blank" rel="noreferrer" class="me__link">Github</a>
+                            target="_blank" rel="noreferrer" className="me__link">Github</a>
                         </li>
                     </ul>
                 </div>

@@ -13,6 +13,12 @@
 }
 
 .card__wrapp{
+    display: flex;
+    flex-direction: column;
+    padding-left: 22px;
+}
+
+.card__description{
     display: block;
     padding-left: 22px;
 }
@@ -23,7 +29,7 @@
     font-style: normal;
     font-weight: 500;
     text-align: left;
-    margin-top:22px;
+    margin-top: 22px;
 }
 
 .card__duration{
@@ -40,14 +46,19 @@
     width: 14px;
     height: 12px;
     margin-top: 30px;
-    background-color: red;
+    background: transparent url('../../images/button_type_dislike.svg') center no-repeat;
     border: none;
+    cursor: pointer;
 }
-
 .card__button:hover{
     opacity: 0.7;
 }
-
+.card__button_like{
+    background: transparent url('../../images/button_type_like.svg') center no-repeat;
+}
+.card__button_delete{
+    background: transparent url('../../images/button_type_delete.svg') center no-repeat;
+}
 .card__poster{
     width: 220px;
     min-height: 120px;
@@ -55,4 +66,24 @@
     background-repeat: no-repeat;
     background-size: cover;
     padding: 6px;
+}
+
+@media screen and (max-width: 770px) {
+
+}
+
+@media screen and (max-width: 600px) {
+    .card{
+        flex-direction: column-reverse;
+    }
+    .card__wrapp{
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: 12px;
+    }
+    .card__poster{
+        padding: 0;
+        width: 100%;
+        min-height: 120px;
+    }
 }

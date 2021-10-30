@@ -6,20 +6,20 @@ function Footer() {
         <div className="body footer">
             <p className="footer__title">Учебный проект Яндекс.Практикум х BeatFilm.</p>
             <div className="footer__wrapp">
-                <p class="footer__copyright">©2021. Енот</p>
+                <p className="footer__copyright">©2021. Енот</p>
                 <nav>
-                    <ul class="footer__links">
+                    <ul className="footer__links">
                         <li>
                             <a href="https://practicum.yandex.ru"
-                            target="_blank" rel="noreferrer" class="footer__link">Яндекс.Практикум</a>
+                            target="_blank" rel="noreferrer" className="footer__link">Яндекс.Практикум</a>
                         </li>
                         <li>
                             <a href="https://github.com/totktobroditvokrug"
-                            target="_blank" rel="noreferrer" class="footer__link">Github</a>
+                            target="_blank" rel="noreferrer" className="footer__link">Github</a>
                         </li>
                         <li>
                             <a href="https://www.facebook.com/" 
-                            target="_blank" rel="noreferrer" class="footer__link">Facebook</a>
+                            target="_blank" rel="noreferrer" className="footer__link">Facebook</a>
                         </li>
                     </ul>
                 </nav>
