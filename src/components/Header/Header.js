@@ -5,7 +5,7 @@ import Landing from '../Landing/Landing';
 
 import logo_account from '../../images/logo_account.svg';
 
-function Header({email}) {
+function Header({email, isRegistered}) {
 
     const [isMenuOpen, setMenuOpen] = useState(false);
 
@@ -14,8 +14,7 @@ function Header({email}) {
     }
 
     const isMain = useRouteMatch({path: "/", exact: true});
-    const isRegistered = useRouteMatch({path: "/not-registered", exact: true});
-
+    console.log('Статус пользователя:', isRegistered);
     return (
         <div>
             <div className={`${isMenuOpen ? "header__overlay" : ""}`}></div>
@@ -30,29 +29,37 @@ function Header({email}) {
                 <div className={`${isMenuOpen ? "header__open" : "header__close"}`}>
                         <Switch>
                             <Route exact path='/'>
+                            {isRegistered && (
                                     <div className={`header__wrapp ${isMenuOpen ? "header__wrapp_on" : ""}`}>
                                         <Link className="link link__movies" to='movies'>Фильмы</Link>
                                         <Link className="link link__movies" to='saved-movies'>Сохраненные фильмы</Link>
-                                    </div>
+                                    </div>                                
+                            )}
+                            {isRegistered && (
                                     <div className={`account ${isMenuOpen ? "account_on" : ""}`}>
-                                        <img className="account__logo" src={logo_account} alt="Пользователь"/>
-                                        <Link to='/not-registered'>
+                                        <img className="account__logo" src={logo_account} alt="Пользователь"/> 
+                                        <Link to='/profile'>
                                         <p>{email}</p>
                                         </Link>
-                                    </div>
+                                    </div>                                
+                            )}
+                                {isRegistered && (
                                     <button
                                         className={`${isMenuOpen ? "header__menu header__menu_close" : "header__menu"}`}
                                         type='button'
                                         aria-label='меню'
                                         onClick={toggleMenu}
                                     >
-                                    </button>
-                            </Route>
-                            <Route path='/not-registered'>
+                                    </button>)}
+                                {!isRegistered &&(<div>
                                     <div className="header__registration">
                                         <Link className="registration" to='/signin'>Регистрация</Link>
-                                        <Link className="button__login" type="button" to='/'>Войти</Link>
-                                    </div>
+                                        <Link
+                                            className="button__login" type="button" to='/signin'
+                                        >Войти</Link>
+                                    </div>                                    
+                                </div>)}
+
                             </Route>
                             <Route path='/movies'>
                                     <div className={`header__wrapp ${isMenuOpen ? "header__wrapp_on" : ""}`}>
@@ -62,7 +69,9 @@ function Header({email}) {
                                     </div>
                                     <div className={`account ${isMenuOpen ? "account_on" : ""}`}>
                                         <img className="account__logo" src={logo_account} alt="Пользователь"/>
+                                        <Link to='/profile'>
                                         <p>{email}</p>
+                                        </Link>
                                     </div>
                                     <button
                                         className={`${isMenuOpen ? "header__menu header__menu_close" : "header__menu"}`}
@@ -80,7 +89,9 @@ function Header({email}) {
                                     </div>
                                     <div className={`account ${isMenuOpen ? "account_on" : ""}`}>
                                         <img className="account__logo" src={logo_account} alt="Пользователь"/>
+                                        <Link to='/profile'>
                                         <p>{email}</p>
+                                        </Link>
                                     </div>
                                     <button
                                         className={`${isMenuOpen ? "header__menu header__menu_close" : "header__menu"}`}
@@ -98,7 +109,9 @@ function Header({email}) {
                                     </div>
                                     <div className={`account ${isMenuOpen ? "account_on" : ""}`}>
                                         <img className="account__logo" src={logo_account} alt="Пользователь"/>
+                                        <Link to='/profile'>
                                         <p>{email}</p>
+                                        </Link>
                                     </div>
                                     <button
                                         className={`${isMenuOpen ? "header__menu header__menu_close" : "header__menu"}`}

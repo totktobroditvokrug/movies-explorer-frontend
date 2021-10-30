@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
@@ -14,11 +14,21 @@ import Movies from "../Movies/Movies";
 const email = "nnnnnnn@nj.jhc";
 
 function App() {
+
+  const [isRegistered, setRegistered] = useState(false);
+
+  function clickLogin() {
+    setRegistered(true);
+  }
+  function clickExit() {
+    console.log('выйти из аккаунта', isRegistered);
+    setRegistered(false);
+  }
   return (
     <div>
       <Switch>
         <Route exact path="/">
-          <Header email={email} />
+          <Header email={email} isRegistered={isRegistered}/>
           <Main></Main>
           <Footer />
         </Route>
@@ -40,12 +50,12 @@ function App() {
         <Route path="/signup">
           <Register />
         </Route>
-        <Route path="/signin">
-          <Login />
+        <Route path="/signin" >
+          <Login clickLogin={clickLogin}/>
         </Route>
         <Route path="/profile">
           <Header email={email} />
-          <Profile email={email}></Profile>
+          <Profile email={email} clickExit={clickExit}></Profile>
         </Route>
         <Route path="*">
           <NotFound />

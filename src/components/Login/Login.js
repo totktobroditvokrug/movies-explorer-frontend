@@ -1,7 +1,7 @@
 import PageWithForm from "../PageWithForm/PageWithForm";
 import '../Form/Form.css';
 
-function Login() {
+function Login({clickLogin}) {
 
     return (
       <div>
@@ -12,6 +12,7 @@ function Login() {
           linkAbout='Ещё не зарегистрированы?'
           linkText='Регистрация'
           link='signup'
+          clickLogin={clickLogin}
         >
             <label className='form__label'>
                 E-mail

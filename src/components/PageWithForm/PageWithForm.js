@@ -12,10 +12,11 @@ function PageWithForm({
   linkText,
   link,
   children,
+  clickLogin
 }) {
   return (
       <div className={`body page__content page_type_${name}`}>
-            <Link to=''>
+            <Link className="form__landing" to=''>
                 <Landing></Landing>
             </Link>
         <form
@@ -26,16 +27,17 @@ function PageWithForm({
 
           <h2 className='form__title'>{title}</h2>
           {children}
-          <button
-            type='submit'
+          <Link
             className="page__button"
+            onClick={clickLogin}
+            to='/'
           >
             {buttonText}
-          </button>
+          </Link>
         </form>
         <div className="form__footer">
           <p className="form__edit">{linkAbout}</p>
-          <Link className="form__link" to={link}>{linkText}</Link>
+          <p className="form__link" >{linkText}</p>
         </div>
       </div>
   );

@@ -1,10 +1,15 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import './Profile.css';
 import '../Form/Form.css';
 
 const userName = 'Сергей'
 
-function Profile({email}) {
+function Profile({email, clickExit}) {
+
+    // function clickExit() {
+    //     console.log('Выйти из аккаунта. Profile');
+    // }
     return (
         <form className="body profile">
             <h1 className="form__title profile__title">Привет, {userName}!</h1>
@@ -34,7 +39,7 @@ function Profile({email}) {
                     {"Какая-то ошибка с email"}
             </span>
             <p className="profile__edit">Редактировать</p>
-            <p className="profile__exit">Выйти из аккаунта</p>
+            <Link className="profile__exit" onClick={clickExit} to='/'>Выйти из аккаунта</Link>
         </form>        
     );
 }    

@@ -1,5 +1,6 @@
 .movies {
   background: #fafafa;
+  padding-top: 70px;
 }
 
 .movies__list {
@@ -20,7 +21,7 @@
     padding: 0;
 }
 
-.movies__button {
+.movies__button-find {
   font-family: "Inter", "Arial", sans-serif;
   font-size: 14px;
   font-style: normal;
@@ -39,10 +40,45 @@
   text-decoration: none;
   cursor: pointer;
 }
-.movies__button:hover {
+.movies__button-find:hover {
   opacity: 0.8;
 }
 
+.movies__select{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  margin-top: 26px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid rgba(170, 170, 170, 0.2);
+  margin-bottom: 40px;
+}
+.movies__text{
+  font-family: Inter;  font-family: "Inter", "Arial", sans-serif;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  text-align: left;
+  margin-left: 14px;
+}
+.movies__button-select {
+  height: 20px;
+  width: 36px;
+  box-sizing: border-box;
+  background: transparent url('../../images/button_select_on.svg') center no-repeat;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+.movies__button-select:hover {
+  opacity: 0.8;
+}
+.movies__button-select_off {
+  background: transparent url('../../images/button_select_off.svg') center no-repeat;
+}
 .movies__input{
     font-family: 'Inter', 'Arial', sans-serif;
     font-size: 18px;
@@ -70,7 +106,7 @@
 }
 
 @media screen and (max-width: 400px) {
-  .movies__button {
+  .movies__button-find {
     line-height: 44px;
     height: 44px;
     width: 80px;
