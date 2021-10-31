@@ -51,7 +51,9 @@ function Movies({ name, isSavedMovies }) {
           ))}
         </ul>
       )}
-      <button className="movies__next" type="button">Ещё</button>
+      <button className="movies__next" type="button">
+        Ещё
+      </button>
     </div>
   );
 }

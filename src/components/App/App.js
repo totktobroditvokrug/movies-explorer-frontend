@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
@@ -6,7 +6,7 @@ import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
-import { Route, useHistory, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 import "./App.css";
 import Movies from "../Movies/Movies";
@@ -14,21 +14,20 @@ import Movies from "../Movies/Movies";
 const email = "nnnnnnn@nj.jhc";
 
 function App() {
-
   const [isRegistered, setRegistered] = useState(false);
 
   function clickLogin() {
     setRegistered(true);
   }
   function clickExit() {
-    console.log('выйти из аккаунта', isRegistered);
+    console.log("выйти из аккаунта", isRegistered);
     setRegistered(false);
   }
   return (
     <div>
       <Switch>
         <Route exact path="/">
-          <Header email={email} isRegistered={isRegistered}/>
+          <Header email={email} isRegistered={isRegistered} />
           <Main></Main>
           <Footer />
         </Route>
@@ -50,8 +49,8 @@ function App() {
         <Route path="/signup">
           <Register />
         </Route>
-        <Route path="/signin" >
-          <Login clickLogin={clickLogin}/>
+        <Route path="/signin">
+          <Login clickLogin={clickLogin} />
         </Route>
         <Route path="/profile">
           <Header email={email} />
