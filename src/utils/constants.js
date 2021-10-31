@@ -22,7 +22,7 @@ export const initialCards = [
         trailer: 'https://cdn.fishki.net/upload/post/201501/29/1406478/3ca9ba9dfb08700b2252e9bd4530d063.jpg',
         thumbnail: 'https://cdn.fishki.net/upload/post/201501/29/1406478/3ca9ba9dfb08700b2252e9bd4530d063.jpg',
         movieId: '2222222',
-        nameRU: 'Название 2',
+        nameRU: 'Название 2 Название 2 Название 2 Название 2 Название 2',
         nameEN: 'title 2'
     },
     {
