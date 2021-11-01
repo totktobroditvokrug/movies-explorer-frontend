@@ -1,0 +1,109 @@
+.profile{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile__title{
+    text-align: center;
+}
+
+.profile__form{
+    width: 100%;
+    max-width: 410px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0;
+    padding: 17px 0 16px 0;
+}
+.profile__form_underline{
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.profile__field{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
+.profile__input{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: right;
+    text-decoration: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile__error{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: left;
+    text-decoration: none;
+    color: #EE3465;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 410px;
+}
+.profile__error_underline{
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.profile__edit{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 220px;
+    margin-bottom: 16px;
+    transition: 0.5s;
+}
+
+.profile__exit{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    text-align: center;
+    color: #EE3465;
+    margin-bottom: 70px;
+    transition: 0.5s;
+}
+
+@media screen and (max-width: 770px){
+    .profile__edit{
+        transition: 0.5s;
+        margin-top: 210px;
+    }
+    .profile__exit{
+        transition: 0.5s;
+        margin-bottom: 269px;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .profile__edit{
+        transition: 0.5s;
+        margin-top: 379px;
+        font-size: 12px;
+    }
+    .profile__exit{
+        transition: 0.5s;
+        margin-bottom: 40px;
+        font-size: 12px;
+    }
+}
