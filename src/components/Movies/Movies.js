@@ -4,9 +4,13 @@ import "../Form/Form.css";
 import Preloader from "../Preloader/Preloader";
 import { initialCards } from "../../utils/constants";
 import MoviesCard from "../MoviesCard/MoviesCard";
+import { useLocation } from "react-router-dom";
 
-function Movies({ name, isSavedMovies }) {
+function Movies({ name }) {
   const [isLoading, setLoading] = useState(false);
+  let isSavedMovies=false;
+  const location = useLocation();
+  location.pathname==='/saved-movies' ? isSavedMovies=true : isSavedMovies=false;
 
   function clickPreloader() {
     setLoading(!isLoading);

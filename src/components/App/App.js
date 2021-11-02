@@ -38,12 +38,12 @@ function App() {
         </Route>
         <Route path="/movies">
           <Header email={email} />
-          <Movies name="movies" isSavedMovies={false} />
+          <Movies name="movies" />
           <Footer />
         </Route>
         <Route path="/saved-movies">
           <Header email={email} />
-          <Movies name="saved-movies" isSavedMovies={true} />
+          <Movies name="saved-movies" />
           <Footer />
         </Route>
         <Route path="/signup">
