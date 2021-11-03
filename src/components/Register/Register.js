@@ -1,7 +1,29 @@
+import React from 'react';
 import PageWithForm from "../PageWithForm/PageWithForm";
 import "../Form/Form.css";
 
-function Register() {
+function Register({
+  onRegister // прокинуть объект для авторизации в App
+}) {
+  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [name, setName] = React.useState('');
+
+  function handleNameChange(event) {
+    setName(event.target.value)
+  }
+  function handlePasswordChange(event) {
+    setPassword(event.target.value)
+  }
+  function handleEmailChange(event) {
+    setEmail(event.target.value)
+  }
+
+  function handleSubmit(event){
+    console.log('поля ввода:', name, email, password);
+    event.preventDefault();
+    onRegister({ name, email, password });
+  }
   return (
     <div>
       <PageWithForm
@@ -11,6 +33,7 @@ function Register() {
         linkAbout="Уже зарегистрированы?"
         linkText="Войти"
         link="signin"
+        onSubmit={handleSubmit}
       >
         <label className="form__label">Имя</label>
         <input
@@ -19,6 +42,7 @@ function Register() {
           name="name"
           id="user-name"
           placeholder="Введите имя"
+          onChange={handleNameChange}
           required
         />
         <span className="form__error" id="user-name-error">
@@ -31,6 +55,7 @@ function Register() {
           name="email"
           id="user-email"
           placeholder="Введите E-mail"
+          onChange={handleEmailChange}
           required
         />
         <span className="form__error" id="user-email-error">
@@ -44,6 +69,7 @@ function Register() {
           name="password"
           id="user-password"
           placeholder="Введите пароль"
+          onChange={handlePasswordChange}
           required
         />
         <span className="form__error" id="user-password-error">

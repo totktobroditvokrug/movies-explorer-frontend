@@ -5,7 +5,7 @@ import Landing from "../Landing/Landing";
 
 import logo_account from "../../images/logo_account.svg";
 
-function Header({ email, isRegistered }) {
+function Header({ email, loggedIn }) {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   function toggleMenu() {
@@ -14,14 +14,14 @@ function Header({ email, isRegistered }) {
   }
 
   const isMain = useRouteMatch({ path: "/", exact: true });
-  console.log("Статус пользователя:", isRegistered);
+  console.log("Статус пользователя:", loggedIn);
   return (
     <div>
       <div className={`${isMenuOpen ? "header__overlay" : ""}`}></div>
       <header
         className={`body header 
                     ${
-                      isMain || isRegistered
+                      isMain || loggedIn
                         ? "header__them_dark"
                         : "header__them_light"
                     }`}
@@ -32,7 +32,7 @@ function Header({ email, isRegistered }) {
         <div className={`${isMenuOpen ? "header__open" : "header__close"}`}>
           <Switch>
             <Route exact path="/">
-              {isRegistered && (
+              {loggedIn && (
                 <div
                   className={`header__wrapp ${
                     isMenuOpen ? "header__wrapp_on" : ""
@@ -46,7 +46,7 @@ function Header({ email, isRegistered }) {
                   </Link>
                 </div>
               )}
-              {isRegistered && (
+              {loggedIn && (
                 <div className={`account ${isMenuOpen ? "account_on" : ""}`}>
                   <img
                     className="account__logo"
@@ -58,7 +58,7 @@ function Header({ email, isRegistered }) {
                   </Link>
                 </div>
               )}
-              {isRegistered && (
+              {loggedIn && (
                 <button
                   className={`${
                     isMenuOpen
@@ -70,7 +70,7 @@ function Header({ email, isRegistered }) {
                   onClick={toggleMenu}
                 ></button>
               )}
-              {!isRegistered && (
+              {!loggedIn && (
                 <div>
                   <div className="header__registration">
                     <Link className="registration" to="/signin">

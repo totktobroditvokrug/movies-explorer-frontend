@@ -13,18 +13,19 @@ function PageWithForm({
   link,
   children,
   clickLogin,
+  onSubmit
 }) {
   return (
     <div className={`body page__content page_type_${name}`}>
       <Link className="form__landing" to="">
         <Landing></Landing>
       </Link>
-      <form className="page__form" name={name} noValidate>
+      <form className="page__form" name={name} onSubmit={onSubmit} noValidate>
         <h2 className="form__title">{title}</h2>
         {children}
-        <Link className="page__button" onClick={clickLogin} to="/">
+        <button type="submit" className="page__button">
           {buttonText}
-        </Link>
+        </button>
       </form>
       <div className="form__footer">
         <p className="form__edit">{linkAbout}</p>

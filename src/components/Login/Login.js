@@ -1,7 +1,23 @@
+import React from 'react';
 import PageWithForm from "../PageWithForm/PageWithForm";
 import "../Form/Form.css";
 
-function Login({ clickLogin }) {
+function Login({ onLogin }) {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  function handleEmailChange(evt) {
+    setEmail(evt.target.value)
+  }
+
+  function handlePasswordChange(evt) {
+    setPassword(evt.target.value)
+  }
+
+  function handleSubmit(evt){
+    evt.preventDefault();
+    onLogin({ email, password });
+  }
   return (
     <div>
       <PageWithForm
@@ -11,7 +27,7 @@ function Login({ clickLogin }) {
         linkAbout="Ещё не зарегистрированы?"
         linkText="Регистрация"
         link="signup"
-        clickLogin={clickLogin}
+        onSubmit={handleSubmit}
       >
         <label className="form__label">E-mail</label>
         <input
@@ -20,6 +36,7 @@ function Login({ clickLogin }) {
           name="email"
           id="user-email"
           placeholder="Введите E-mail"
+          onChange={handleEmailChange}
           required
         />
         <span className="form__error" id="user-email-error">
@@ -32,6 +49,7 @@ function Login({ clickLogin }) {
           name="password"
           id="user-password"
           placeholder="Введите пароль"
+          onChange={handlePasswordChange}
           required
         />
         <span className="form__error" id="user-password-error">
