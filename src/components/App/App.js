@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Route, Switch, useHistory } from "react-router-dom";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
@@ -6,36 +8,35 @@ import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
-import { Route, Switch, useHistory } from "react-router-dom";
 
 import "./App.css";
 import Movies from "../Movies/Movies";
 
-import * as auth from '../../utils/auth';
+import * as auth from "../../utils/auth";
 import { api } from "../../utils/api.js";
 
 function App() {
   const [isRegistered, setRegistered] = useState(false);
 
   //---------- состояния и обработчики пользователя
-const [currentUser, setCurrentUser] = React.useState({data:{}});
-const [loggedIn, setLoggedIn] = React.useState(false);  // При авторизации будем перезаписывать юзера и переполучать токен
+  const [currentUser, setCurrentUser] = React.useState({ data: {} });
+  const [loggedIn, setLoggedIn] = React.useState(false); // При авторизации будем перезаписывать юзера и переполучать токен
 
-useEffect(() => {
-   console.log('loggedIn:', loggedIn);
-  if (loggedIn) {
-    // console.log('запрос к апи за данными пользователя token=', localStorage.getItem('jwt'));
-    api
-      .getUserInfo() // запрос к апи за данными пользователя
-      .then((data) => {
-        console.log('данные пользователя от getUserInfo:', data);
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        // console.log('ошибка получения данных пользователя', err);
-      });
-  }
-}, [loggedIn]);
+  useEffect(() => {
+    console.log("loggedIn:", loggedIn);
+    if (loggedIn) {
+      // console.log('запрос к апи за данными пользователя token=', localStorage.getItem('jwt'));
+      api
+        .getUserInfo() // запрос к апи за данными пользователя
+        .then((data) => {
+          console.log("данные пользователя от getUserInfo:", data);
+          setCurrentUser(data);
+        })
+        .catch((err) => {
+          // console.log('ошибка получения данных пользователя', err);
+        });
+    }
+  }, [loggedIn]);
 
   //---------- состояния и обработчики форм авторизации
   const [authUser, setAuthUser] = React.useState({
@@ -56,13 +57,14 @@ useEffect(() => {
 
   const history = useHistory();
 
+  // -------------------- авторизация отлажена без валидации ----------------!!!
   function onLogin({ email, password }) {
     // авторизация
     auth
       .login({ email, password })
       .then((res) => {
         const token = res.token;
-        console.log('авторизация. токен от сервера такой:', token);
+        console.log("авторизация. токен от сервера такой:", token);
         if (!!token) {
           // если токен от сервера пришел
           localStorage.setItem("jwt", token);
@@ -70,13 +72,13 @@ useEffect(() => {
           setEmail(email);
           history.push("/"); // добавить флаг для смены меню хедера
         } else {
-            // вешаем окошко ошибки авторизации
-            console.log('Токен от сервера не пришел');
+          // вешаем окошко ошибки авторизации
+          console.log("Токен от сервера не пришел");
         }
       })
       .catch((err) => {
-          // вешаем окошко проблем
-          console.log('Ошибка автороизации:', err);
+        // вешаем окошко проблем
+        console.log("Ошибка автороизации:", err);
       });
   }
 
@@ -85,7 +87,7 @@ useEffect(() => {
     auth
       .register({ name, email, password })
       .then((res) => {
-        console.log('Регистрация успешна-', res);
+        console.log("Регистрация успешна-", res);
         history.push("/signin"); // на авторизацию
         setAuthUser({
           name: res.data.name,
@@ -94,7 +96,7 @@ useEffect(() => {
         });
       })
       .catch((err) => {
-         console.log('Регистрация с ошибкой-', err);
+        console.log("Регистрация с ошибкой-", err);
       });
   }
 
@@ -140,8 +142,19 @@ useEffect(() => {
     }
   };
 
-  function clickLogin() {
-    setRegistered(true);
+  function onUpdateProfile({ email, name }) {
+    console.log('Запрос patch на изменение профиля', email, name);
+    api
+      .setUserInfo({ name, email })
+      .then((newUserData) => {
+        console.log("Профиль обновлен-", newUserData);
+        history.push("/"); // на главную
+        setCurrentUser(newUserData);
+        setEmail(email);
+      })
+      .catch((err) => {
+        console.log("Ошибка обновления профиля-", err);
+      });
   }
   function clickExit() {
     onExit();
@@ -149,43 +162,45 @@ useEffect(() => {
     setRegistered(false);
   }
   return (
-    <div>
-      <Switch>
-        <Route exact path="/">
-          <Header email={email} loggedIn={loggedIn} />
-          <Main></Main>
-          <Footer />
-        </Route>
-        <Route path="/not-registered">
-          <Header email={email} />
-          <Main></Main>
-          <Footer />
-        </Route>
-        <Route path="/movies">
-          <Header email={email} />
-          <Movies name="movies" />
-          <Footer />
-        </Route>
-        <Route path="/saved-movies">
-          <Header email={email} />
-          <Movies name="saved-movies" />
-          <Footer />
-        </Route>
-        <Route path="/signup">
-          <Register  onRegister={onRegister}/>
-        </Route>
-        <Route path="/signin">
-          <Login onLogin={onLogin} />
-        </Route>
-        <Route path="/profile">
-          <Header email={email} />
-          <Profile email={email} clickExit={clickExit}></Profile>
-        </Route>
-        <Route path="*">
-          <NotFound />
-        </Route>
-      </Switch>
-    </div>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div>
+        <Switch>
+          <Route exact path="/">
+            <Header email={email} loggedIn={loggedIn} />
+            <Main></Main>
+            <Footer />
+          </Route>
+          <Route path="/not-registered">
+            <Header email={email} />
+            <Main></Main>
+            <Footer />
+          </Route>
+          <Route path="/movies">
+            <Header email={email} />
+            <Movies name="movies" />
+            <Footer />
+          </Route>
+          <Route path="/saved-movies">
+            <Header email={email} />
+            <Movies name="saved-movies" />
+            <Footer />
+          </Route>
+          <Route path="/signup">
+            <Register onRegister={onRegister} />
+          </Route>
+          <Route path="/signin">
+            <Login onLogin={onLogin} />
+          </Route>
+          <Route path="/profile">
+            <Header email={email} />
+            <Profile clickExit={clickExit} onUpdateProfile={onUpdateProfile}></Profile>
+          </Route>
+          <Route path="*">
+            <NotFound />
+          </Route>
+        </Switch>
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

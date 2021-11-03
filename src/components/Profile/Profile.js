@@ -1,15 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import "./Profile.css";
 import "../Form/Form.css";
 
-const userName = "Сергей";
 
-function Profile({ email, clickExit }) {
+function Profile({ clickExit, onUpdateProfile }) {
+  const currentUser = React.useContext(CurrentUserContext);
 
+  const [email, setEmail] = React.useState('');
+  const [name, setName] = React.useState('');
+
+  function handleEmailChange(evt) {
+    setEmail(evt.target.value)
+  }
+
+  function handleNameChange(evt) {
+    setName(evt.target.value)
+  }
+
+  function handleSubmit(evt){
+    evt.preventDefault();
+    onUpdateProfile({ email, name });
+  }
   return (
     <form className="body profile">
-      <h1 className="form__title profile__title">Привет, {userName}!</h1>
+      <h1 className="form__title profile__title">Привет, {currentUser.data.name}!</h1>
       <div className="profile__form">
         <p className="profile__field">Имя</p>
         <input
@@ -17,7 +33,9 @@ function Profile({ email, clickExit }) {
           type="text"
           name="name"
           id="user-name"
-          value={userName}
+          placeholder="Введите новое имя"
+          onChange={handleNameChange}
+          required
         />
       </div>
       <span
@@ -31,13 +49,15 @@ function Profile({ email, clickExit }) {
           type="url"
           name="email"
           id="user-email"
-          value={email}
+          placeholder="Введите новый e-mail"
+          onChange={handleEmailChange}
+          required
         />
       </div>
       <span className="form__error" id="user-email-error">
         {"Какая-то ошибка с email"}
       </span>
-      <p className="profile__edit">Редактировать</p>
+      <button type="submit" className="profile__edit" onClick={handleSubmit}>Редактировать</button>
       <Link className="profile__exit" onClick={clickExit} to="/">
         Выйти из аккаунта
       </Link>

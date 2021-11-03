@@ -71,6 +71,8 @@
     margin-top: 220px;
     margin-bottom: 16px;
     transition: 0.5s;
+    border: none;
+    background-color: transparent;
 }
 
 .profile__exit{
