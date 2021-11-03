@@ -27,7 +27,7 @@ export function useFormWithValidation() {
     setIsValid(input.closest("form").checkValidity());
   };
 
-  const resetFrom = useCallback(
+  const resetForm = useCallback(
     (newValues = {}, newErrors = {}, newIsValid = false) => {
       setValues(newValues);
       setErrors(newErrors);
@@ -36,5 +36,5 @@ export function useFormWithValidation() {
     [setValues, setErrors, setIsValid]
   );
 
-  return { values, handleChange, resetFrom, errors, isValid };
+  return { values, handleChange, resetForm, errors, isValid };
 }

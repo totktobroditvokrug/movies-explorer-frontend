@@ -143,6 +143,9 @@ function App() {
   const [isProfileSending, setProfileSending] = React.useState(false); // ожидание ответа сервера
   function onEditProfileMode() {
     setEditProfileMode(true);
+  };
+  function offEditProfileMode() {
+    setEditProfileMode(false);
   }
   function onUpdateProfile({ email, name }) {
     setProfileSending(true);
@@ -203,6 +206,7 @@ function App() {
               isSending={isProfileSending}
               isEditProfileMode={isEditProfileMode}
               onEditProfileMode={onEditProfileMode}
+              offEditProfileMode={offEditProfileMode}
               ></Profile>
           </Route>
           <Route path="*">
