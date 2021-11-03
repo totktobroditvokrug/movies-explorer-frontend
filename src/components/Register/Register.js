@@ -1,4 +1,5 @@
 import React from 'react';
+// import {useFormWithValidation} from "../hooks/useForm";
 import PageWithForm from "../PageWithForm/PageWithForm";
 import "../Form/Form.css";
 
@@ -31,7 +32,7 @@ function Register({
         name="register"
         buttonText="Зарегистрироваться"
         linkAbout="Уже зарегистрированы?"
-        linkText="Войти"
+        linkText="Зарегистрироваться"
         link="signin"
         onSubmit={handleSubmit}
       >

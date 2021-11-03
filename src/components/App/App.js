@@ -70,7 +70,7 @@ function App() {
           localStorage.setItem("jwt", token);
           setLoggedIn(true); // разрешаем вход на защищаемый роут <----------
           setEmail(email);
-          history.push("/"); // добавить флаг для смены меню хедера
+          history.push("/movies"); // добавить флаг для смены меню хедера
         } else {
           // вешаем окошко ошибки авторизации
           console.log("Токен от сервера не пришел");
@@ -88,12 +88,8 @@ function App() {
       .register({ name, email, password })
       .then((res) => {
         console.log("Регистрация успешна-", res);
-        history.push("/signin"); // на авторизацию
-        setAuthUser({
-          name: res.data.name,
-          email: res.data.email,
-          idAuthUser: res.data._id,
-        });
+        console.log("отправить на авторизацию", password, email);
+        onLogin({ email, password }); // здесь возможна подстава, что будет не тот пароль и почта
       })
       .catch((err) => {
         console.log("Регистрация с ошибкой-", err);
@@ -142,19 +138,27 @@ function App() {
     }
   };
 
+  //------------------- Обновление профиля без валидации ---------------!!!
+  const [isEditProfileMode, setEditProfileMode] = React.useState(true); // включить режим редактирования
+  const [isProfileSending, setProfileSending] = React.useState(false); // ожидание ответа сервера
+  function onEditProfileMode() {
+    setEditProfileMode(true);
+  }
   function onUpdateProfile({ email, name }) {
+    setProfileSending(true);
     console.log('Запрос patch на изменение профиля', email, name);
     api
       .setUserInfo({ name, email })
       .then((newUserData) => {
         console.log("Профиль обновлен-", newUserData);
-        history.push("/"); // на главную
+    //    history.push("/"); // на главную
         setCurrentUser(newUserData);
         setEmail(email);
       })
       .catch((err) => {
         console.log("Ошибка обновления профиля-", err);
-      });
+      })
+      .finally(() => {setProfileSending(false); setEditProfileMode(false);}); // сервер отстрелялся
   }
   function clickExit() {
     onExit();
@@ -193,7 +197,13 @@ function App() {
           </Route>
           <Route path="/profile">
             <Header email={email} />
-            <Profile clickExit={clickExit} onUpdateProfile={onUpdateProfile}></Profile>
+            <Profile 
+              clickExit={clickExit} 
+              onUpdateProfile={onUpdateProfile}
+              isSending={isProfileSending}
+              isEditProfileMode={isEditProfileMode}
+              onEditProfileMode={onEditProfileMode}
+              ></Profile>
           </Route>
           <Route path="*">
             <NotFound />

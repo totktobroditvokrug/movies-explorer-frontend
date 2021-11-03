@@ -73,7 +73,7 @@ function Header({ email, loggedIn }) {
               {!loggedIn && (
                 <div>
                   <div className="header__registration">
-                    <Link className="registration" to="/signin">
+                    <Link className="registration" to="/signup">
                       Регистрация
                     </Link>
                     <Link className="button__login" type="button" to="/signin">

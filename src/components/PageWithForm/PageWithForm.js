@@ -12,7 +12,6 @@ function PageWithForm({
   linkText,
   link,
   children,
-  clickLogin,
   onSubmit
 }) {
   return (
@@ -29,7 +28,7 @@ function PageWithForm({
       </form>
       <div className="form__footer">
         <p className="form__edit">{linkAbout}</p>
-        <p className="form__link">{linkText}</p>
+        <Link className="form__link" to={link}>{linkText} </Link>
       </div>
     </div>
   );
