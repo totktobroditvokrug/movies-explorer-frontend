@@ -8,12 +8,11 @@ import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
-
-import "./App.css";
 import Movies from "../Movies/Movies";
-
 import * as auth from "../../utils/auth";
 import { api } from "../../utils/api.js";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import "./App.css";
 
 function App() {
   const [isRegistered, setRegistered] = useState(false);
@@ -133,25 +132,28 @@ function App() {
   const [isProfileSending, setProfileSending] = React.useState(false); // ожидание ответа сервера
   function onEditProfileMode() {
     setEditProfileMode(true);
-  };
+  }
   function offEditProfileMode() {
     setEditProfileMode(false);
   }
   function onUpdateProfile({ email, name }) {
     setProfileSending(true);
-//    console.log('Запрос patch на изменение профиля', email, name);
+    //    console.log('Запрос patch на изменение профиля', email, name);
     api
       .setUserInfo({ name, email })
       .then((newUserData) => {
         console.log("Профиль обновлен-", newUserData);
-    //    history.push("/"); // на главную
+        //    history.push("/"); // на главную
         setCurrentUser(newUserData);
         setEmail(email);
       })
       .catch((err) => {
         console.log("Ошибка обновления профиля-", err);
       })
-      .finally(() => {setProfileSending(false); setEditProfileMode(false);}); // сервер отстрелялся
+      .finally(() => {
+        setProfileSending(false);
+        setEditProfileMode(false);
+      }); // сервер отстрелялся
   }
 
   function clickExit() {
@@ -170,37 +172,38 @@ function App() {
             <Main></Main>
             <Footer />
           </Route>
-          <Route path="/not-registered">
-            <Header email={email} />
-            <Main></Main>
-            <Footer />
-          </Route>
-          <Route path="/movies">
-            <Header email={email} />
-            <Movies name="movies" />
-            <Footer />
-          </Route>
-          <Route path="/saved-movies">
-            <Header email={email} />
-            <Movies name="saved-movies" />
-            <Footer />
-          </Route>
+          <ProtectedRoute path="/movies" loggedIn={loggedIn}>
+            <Route path="/movies">
+              <Header email={email} />
+              <Movies name="movies" />
+              <Footer />
+            </Route>
+          </ProtectedRoute>
+          <ProtectedRoute path="/saved-movies" loggedIn={loggedIn}>
+            <Route path="/saved-movies">
+              <Header email={email} />
+              <Movies name="saved-movies" />
+              <Footer />
+            </Route>
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile" loggedIn={loggedIn}>
+            <Route path="/profile">
+              <Header email={email} />
+              <Profile
+                clickExit={clickExit}
+                onUpdateProfile={onUpdateProfile}
+                isSending={isProfileSending}
+                isEditProfileMode={isEditProfileMode}
+                onEditProfileMode={onEditProfileMode}
+                offEditProfileMode={offEditProfileMode}
+              ></Profile>
+            </Route>
+          </ProtectedRoute>
           <Route path="/signup">
-            <Register onRegister={onRegister} isSending={isRegisterSending}/>
+            <Register onRegister={onRegister} isSending={isRegisterSending} />
           </Route>
           <Route path="/signin">
-            <Login onLogin={onLogin} isSending={isLoginSending}/>
-          </Route>
-          <Route path="/profile">
-            <Header email={email} />
-            <Profile 
-              clickExit={clickExit} 
-              onUpdateProfile={onUpdateProfile}
-              isSending={isProfileSending}
-              isEditProfileMode={isEditProfileMode}
-              onEditProfileMode={onEditProfileMode}
-              offEditProfileMode={offEditProfileMode}
-              ></Profile>
+            <Login onLogin={onLogin} isSending={isLoginSending} />
           </Route>
           <Route path="*">
             <NotFound />
