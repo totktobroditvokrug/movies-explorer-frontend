@@ -14,6 +14,11 @@ function Profile({
   onEditProfileMode,
   offEditProfileMode,
 }) {
+
+  useEffect(() => {  // при повторных заходах на страницу скидывать режим редактирования
+    offEditProfileMode();
+  }, []);
+
   const currentUser = React.useContext(CurrentUserContext);
 
   const { values, handleChange, resetForm, errors, isValid } =
@@ -28,32 +33,15 @@ function Profile({
     onUpdateProfile(values);
   }
 
-  // const [email, setEmail] = React.useState("");
-  // const [name, setName] = React.useState("");
-
-  // function handleEmailChange(evt) {
-  //   setEmail(evt.target.value);
-  // }
-
-  // function handleNameChange(evt) {
-  //   setName(evt.target.value);
-  // }
-
-  // function handleSubmit(evt) {
-  //   evt.preventDefault();
-  //   onUpdateProfile({ email, name });
-  // }
   const handleOverlayClose = (event) => {
     if (event.target === event.currentTarget) {
       offEditProfileMode();
+      resetForm({});
     }
   }
-//  function handleOverlayClose() {
-  //   console.log("кликаем мышкой");
-  // }
 
   return (
-    <div className="" style={{height: '90vh'}} onMouseDown={handleOverlayClose}>
+    <div className="" style={{height: '80vh'}} onMouseDown={handleOverlayClose}>
       <form className="body profile" noValidate >
         <h1 className="form__title profile__title">
           Привет, {currentUser.data.name}!
@@ -70,7 +58,7 @@ function Profile({
               onChange={handleChange}
               required
               minLength="2"
-              maxLength="40"
+              maxLength="30"
             />
           ) : (
             <p className="profile__input">{currentUser.data.name}</p>

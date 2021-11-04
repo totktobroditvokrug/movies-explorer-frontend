@@ -1,22 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PageWithForm from "../PageWithForm/PageWithForm";
 import "../Form/Form.css";
+import { useFormWithValidation } from "../../hooks/useForm";
 
-function Login({ onLogin }) {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+function Login({ onLogin, isSending }) {
+  const { values, handleChange, resetForm, errors, isValid } =
+  useFormWithValidation();
 
-  function handleEmailChange(evt) {
-    setEmail(evt.target.value)
-  }
+useEffect(() => {
+  resetForm({});
+}, [isSending, resetForm]);
 
-  function handlePasswordChange(evt) {
-    setPassword(evt.target.value)
-  }
 
   function handleSubmit(evt){
     evt.preventDefault();
-    onLogin({ email, password });
+    onLogin(values);
   }
   return (
     <div>
@@ -28,32 +26,36 @@ function Login({ onLogin }) {
         linkText="Регистрация"
         link="signup"
         onSubmit={handleSubmit}
+        isSending={isSending}
+        isValid={isValid}
       >
         <label className="form__label">E-mail</label>
         <input
           className="form__input"
-          type="url"
+          type="email"
           name="email"
           id="user-email"
           placeholder="Введите E-mail"
-          onChange={handleEmailChange}
+          onChange={handleChange}
           required
         />
         <span className="form__error" id="user-email-error">
-          тут что-то про ошибку емэйла
+          {errors.email || ""}
         </span>
-        <label className="form__label">E-mail</label>
+        <label className="form__label">Пароль</label>
         <input
           className="form__input"
           type="password"
           name="password"
           id="user-password"
           placeholder="Введите пароль"
-          onChange={handlePasswordChange}
+          onChange={handleChange}
+          minLength="8"
+          maxLength="40"
           required
         />
         <span className="form__error" id="user-password-error">
-          тут что-то про ошибку пароля
+          {errors.password || ""}
         </span>
       </PageWithForm>
     </div>

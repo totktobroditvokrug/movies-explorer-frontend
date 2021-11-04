@@ -12,7 +12,9 @@ function PageWithForm({
   linkText,
   link,
   children,
-  onSubmit
+  onSubmit,
+  isSending,
+  isValid
 }) {
   return (
     <div className={`body page__content page_type_${name}`}>
@@ -22,13 +24,21 @@ function PageWithForm({
       <form className="page__form" name={name} onSubmit={onSubmit} noValidate>
         <h2 className="form__title">{title}</h2>
         {children}
-        <button type="submit" className="page__button">
-          {buttonText}
+        <button
+          type="submit"
+          className={`page__button ${
+            (!isValid || isSending) && "page__button_disabled"
+          }`}
+          disabled={isSending || !isValid}
+        >
+          {isSending ? "Отправляем..." : buttonText}
         </button>
       </form>
       <div className="form__footer">
         <p className="form__edit">{linkAbout}</p>
-        <Link className="form__link" to={link}>{linkText} </Link>
+        <Link className="form__link" to={link}>
+          {linkText}{" "}
+        </Link>
       </div>
     </div>
   );

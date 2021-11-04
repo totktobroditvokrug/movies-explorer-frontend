@@ -1,29 +1,21 @@
-import React from 'react';
-// import {useFormWithValidation} from "../hooks/useForm";
+import React, { useEffect } from "react";
 import PageWithForm from "../PageWithForm/PageWithForm";
 import "../Form/Form.css";
+import { useFormWithValidation } from "../../hooks/useForm";
 
 function Register({
-  onRegister // прокинуть объект для авторизации в App
+  onRegister, isSending // прокинуть объект для авторизации в App
 }) {
-  const [password, setPassword] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [name, setName] = React.useState('');
+  const { values, handleChange, resetForm, errors, isValid } =
+    useFormWithValidation();
 
-  function handleNameChange(event) {
-    setName(event.target.value)
-  }
-  function handlePasswordChange(event) {
-    setPassword(event.target.value)
-  }
-  function handleEmailChange(event) {
-    setEmail(event.target.value)
-  }
+  useEffect(() => {
+    resetForm({});
+  }, [isSending, resetForm]);
 
-  function handleSubmit(event){
-    console.log('поля ввода:', name, email, password);
+  function handleSubmit(event) {
     event.preventDefault();
-    onRegister({ name, email, password });
+    onRegister(values);
   }
   return (
     <div>
@@ -32,9 +24,11 @@ function Register({
         name="register"
         buttonText="Зарегистрироваться"
         linkAbout="Уже зарегистрированы?"
-        linkText="Зарегистрироваться"
+        linkText="Войти"
         link="signin"
         onSubmit={handleSubmit}
+        isSending={isSending}
+        isValid={isValid}
       >
         <label className="form__label">Имя</label>
         <input
@@ -43,38 +37,42 @@ function Register({
           name="name"
           id="user-name"
           placeholder="Введите имя"
-          onChange={handleNameChange}
+          onChange={handleChange}
+          minLength="2"
+          maxLength="30"
           required
         />
         <span className="form__error" id="user-name-error">
-          тут что-то про ошибку имени
+          {errors.name || ""}
         </span>
         <label className="form__label">E-mail</label>
         <input
           className="form__input"
-          type="url"
+          type="email"
           name="email"
           id="user-email"
           placeholder="Введите E-mail"
-          onChange={handleEmailChange}
+          onChange={handleChange}
           required
         />
         <span className="form__error" id="user-email-error">
-          тут что-то про ошибку емэйла
+          {errors.email || ""}
         </span>
-        <label className="form__label">E-mail</label>
+        <label className="form__label">Пароль</label>
         <input
           //добавить проверку длины ссообщения ошибки
-          className="form__input form__input_error"
+          className={`form__input ${!!errors.password && "form__input_error"}`}
           type="password"
           name="password"
           id="user-password"
           placeholder="Введите пароль"
-          onChange={handlePasswordChange}
+          onChange={handleChange}
+          minLength="8"
+          maxLength="40"
           required
         />
         <span className="form__error" id="user-password-error">
-          тут что-то про ошибку пароля
+         {errors.password || ""}
         </span>
       </PageWithForm>
     </div>

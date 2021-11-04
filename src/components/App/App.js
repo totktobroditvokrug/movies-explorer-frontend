@@ -38,28 +38,14 @@ function App() {
     }
   }, [loggedIn]);
 
-  //---------- состояния и обработчики форм авторизации
-  const [authUser, setAuthUser] = React.useState({
-    name: "Сергей",
-    email: "kto-to-5@gde.to",
-    idAuthUser: "1234567",
-  }); // данные юзера при регистрации
-
-  const [statusTooltip, setStatusTooltip] = React.useState({
-    srcIcon: "",
-    text: "",
-    isOpen: false,
-  }); // статус успешной регистрации. Текст и ссылка картинки
-
-  // // console.log('!!statusTooltip:', !!statusTooltip);
-
   const [email, setEmail] = React.useState("test email");
 
   const history = useHistory();
 
-  // -------------------- авторизация отлажена без валидации ----------------!!!
+  // -------------------- авторизация отлажена без ошибки сервера ----------------!!!
+  const [isLoginSending, setLoginSending] = React.useState(false); // ожидание ответа сервера
   function onLogin({ email, password }) {
-    // авторизация
+    setLoginSending(true);
     auth
       .login({ email, password })
       .then((res) => {
@@ -79,11 +65,14 @@ function App() {
       .catch((err) => {
         // вешаем окошко проблем
         console.log("Ошибка автороизации:", err);
-      });
+      })
+      .finally(() => setLoginSending(false));
   }
 
-  // ---------------- Регистрация отлажена без валидации -----------------!!!
+  // ---------------- Регистрация отлажена без ошибки сервера -----------------!!!
+  const [isRegisterSending, setRegisterSending] = React.useState(false); // ожидание ответа сервера
   function onRegister({ name, email, password }) {
+    setRegisterSending(true);
     auth
       .register({ name, email, password })
       .then((res) => {
@@ -93,7 +82,8 @@ function App() {
       })
       .catch((err) => {
         console.log("Регистрация с ошибкой-", err);
-      });
+      })
+      .finally(() => setRegisterSending(false));
   }
 
   function onExit() {
@@ -138,7 +128,7 @@ function App() {
     }
   };
 
-  //------------------- Обновление профиля без валидации ---------------!!!
+  //------------------- Обновление профиля отлажено без ошибки сервера --------------- !!!
   const [isEditProfileMode, setEditProfileMode] = React.useState(true); // включить режим редактирования
   const [isProfileSending, setProfileSending] = React.useState(false); // ожидание ответа сервера
   function onEditProfileMode() {
@@ -149,7 +139,7 @@ function App() {
   }
   function onUpdateProfile({ email, name }) {
     setProfileSending(true);
-    console.log('Запрос patch на изменение профиля', email, name);
+//    console.log('Запрос patch на изменение профиля', email, name);
     api
       .setUserInfo({ name, email })
       .then((newUserData) => {
@@ -163,11 +153,14 @@ function App() {
       })
       .finally(() => {setProfileSending(false); setEditProfileMode(false);}); // сервер отстрелялся
   }
+
   function clickExit() {
     onExit();
     console.log("выйти из аккаунта", isRegistered);
     setRegistered(false);
   }
+
+  //------------------ Разметка ---------------
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div>
@@ -193,10 +186,10 @@ function App() {
             <Footer />
           </Route>
           <Route path="/signup">
-            <Register onRegister={onRegister} />
+            <Register onRegister={onRegister} isSending={isRegisterSending}/>
           </Route>
           <Route path="/signin">
-            <Login onLogin={onLogin} />
+            <Login onLogin={onLogin} isSending={isLoginSending}/>
           </Route>
           <Route path="/profile">
             <Header email={email} />
