@@ -1,6 +1,6 @@
 import { userUrl, cardUrl,  likesUrl, baseUrl } from '../utils/constants'
 
-class Api {
+class MoviesApi {
     constructor(config) {
       this._url = config.baseUrl;
       this._headers = config.headers;
@@ -10,7 +10,7 @@ class Api {
       if (res.ok) {
           return res.json();
       }
-      return Promise.reject(res.status);
+      return Promise.reject(`${res.status}`);
     }
 
 
@@ -58,7 +58,6 @@ class Api {
     }
 
     setUserInfo(data) {  // закинет юзера на сервер
-      console.log('API установки нового профиля');
       this._headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
         return fetch(`${this._url}/${userUrl}`, {
             method: "PATCH",
@@ -107,7 +106,7 @@ class Api {
     }
 }
 
-export const api = new Api({
+export const api = new MoviesApi({
   baseUrl: baseUrl,
   headers: {
     // authorization: '52d9d703-f9d4-41bc-9951-d16f2045b1bc',

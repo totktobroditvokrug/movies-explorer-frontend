@@ -5,7 +5,7 @@ import { baseUrl } from './constants.js'
 
 const BASE_URL = baseUrl;
 
-const handleResponse = res => res.ok ? res.json() : Promise.reject(res);
+const handleResponse = res => res.ok ? res.json() : Promise.reject(res.status);
 
 export const checkToken = (token) => {
     return fetch(`${BASE_URL}/users/me`, {

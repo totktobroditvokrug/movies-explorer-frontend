@@ -14,16 +14,18 @@ function PageWithForm({
   children,
   onSubmit,
   isSending,
-  isValid
+  isValid,
+  errStatus
 }) {
   return (
     <div className={`body page__content page_type_${name}`}>
       <Link className="form__landing" to="">
         <Landing></Landing>
       </Link>
-      <form className="page__form" name={name} onSubmit={onSubmit} noValidate>
+      <form className="page__form" name={name} onSubmit={onSubmit} noValidate >
         <h2 className="form__title">{title}</h2>
         {children}
+        { !!errStatus && errStatus!=='' && <p className="form__error form__error_server">{errStatus}</p>}
         <button
           type="submit"
           className={`page__button ${

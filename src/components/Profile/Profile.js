@@ -10,9 +10,11 @@ function Profile({
   clickExit,
   onUpdateProfile,
   isSending,
-  isEditProfileMode,
-  onEditProfileMode,
-  offEditProfileMode,
+  isEditProfileMode, // режим редактирование профиля
+  onEditProfileMode, // стэйт включения редактирования
+  offEditProfileMode, // стэйт выключения редактирования
+  errStatus,
+  resetErrorStatus
 }) {
 
   useEffect(() => {  // при повторных заходах на страницу скидывать режим редактирования
@@ -28,7 +30,12 @@ function Profile({
     resetForm({});
   }, [isSending, resetForm]);
 
+  useEffect(() => {
+    resetErrorStatus();
+  }, []);
+
   function handleSubmit(e) {
+ //   console.log('сабмит профиля', values);
     e.preventDefault();
     onUpdateProfile(values);
   }
@@ -89,6 +96,7 @@ function Profile({
         <span className="form__error" id="user-email-error">
           {errors.email || ""}
         </span>
+        { !!errStatus && errStatus!=='' && <p className="form__error form__error_server">{errStatus}</p>}
         {isEditProfileMode ? (
           <button
             type="submit"

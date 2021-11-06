@@ -3,16 +3,18 @@ import PageWithForm from "../PageWithForm/PageWithForm";
 import "../Form/Form.css";
 import { useFormWithValidation } from "../../hooks/useForm";
 
-function Register({
-  onRegister, isSending // прокинуть объект для авторизации в App
+function Register({ 
+  onRegister, isSending, errStatus, resetErrorStatus // прокинуть объект для авторизации в App
 }) {
   const { values, handleChange, resetForm, errors, isValid } =
-    useFormWithValidation();
+    useFormWithValidation(); // траблы со стэйтами хука при автозаполнении форм
 
   useEffect(() => {
     resetForm({});
   }, [isSending, resetForm]);
-
+  useEffect(() => {
+    resetErrorStatus();
+  }, []);
   function handleSubmit(event) {
     event.preventDefault();
     onRegister(values);
@@ -29,6 +31,7 @@ function Register({
         onSubmit={handleSubmit}
         isSending={isSending}
         isValid={isValid}
+        errStatus={errStatus}
       >
         <label className="form__label">Имя</label>
         <input

@@ -11,6 +11,7 @@ import Register from "../Register/Register";
 import Movies from "../Movies/Movies";
 import * as auth from "../../utils/auth";
 import { api } from "../../utils/api.js";
+import { chekErrorType } from "../../utils/err_const";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import "./App.css";
 
@@ -41,15 +42,20 @@ function App() {
 
   const history = useHistory();
 
-  // -------------------- авторизация отлажена без ошибки сервера ----------------!!!
+  // -------------------- авторизация отлажена  ---------------- проверить статусы сервера!!!
   const [isLoginSending, setLoginSending] = React.useState(false); // ожидание ответа сервера
+  const [isLoginRec, setLoginRec] = React.useState(""); // сообщение сервера
+  function resetErrorStatusLogin() {
+    setLoginRec(""); // сбросить сообщение об ошибке
+  }
   function onLogin({ email, password }) {
     setLoginSending(true);
+    setLoginRec(""); // сбросить сообщение об ошибке
     auth
       .login({ email, password })
       .then((res) => {
         const token = res.token;
-        console.log("авторизация. токен от сервера такой:", token);
+//        console.log("авторизация. токен от сервера такой:", token);
         if (!!token) {
           // если токен от сервера пришел
           localStorage.setItem("jwt", token);
@@ -58,29 +64,32 @@ function App() {
           history.push("/movies"); // добавить флаг для смены меню хедера
         } else {
           // вешаем окошко ошибки авторизации
+          setLoginRec("Токен от сервера не пришел");
           console.log("Токен от сервера не пришел");
         }
       })
       .catch((err) => {
-        // вешаем окошко проблем
-        console.log("Ошибка автороизации:", err);
+        setLoginRec(chekErrorType(err));
       })
       .finally(() => setLoginSending(false));
   }
 
-  // ---------------- Регистрация отлажена без ошибки сервера -----------------!!!
+  // ---------------- Регистрация отлажена ----------------- 
   const [isRegisterSending, setRegisterSending] = React.useState(false); // ожидание ответа сервера
+  const [isRegisterRec, setRegisterRec] = React.useState(""); // сообщение сервера
+  function resetErrorStatusRegister() {
+    setRegisterRec(""); // сбросить сообщение об ошибке
+  }
   function onRegister({ name, email, password }) {
     setRegisterSending(true);
+    setRegisterRec(""); // сбросить сообщение об ошибке
     auth
       .register({ name, email, password })
       .then((res) => {
-        console.log("Регистрация успешна-", res);
-        console.log("отправить на авторизацию", password, email);
         onLogin({ email, password }); // здесь возможна подстава, что будет не тот пароль и почта
       })
       .catch((err) => {
-        console.log("Регистрация с ошибкой-", err);
+        setRegisterRec(chekErrorType(err));
       })
       .finally(() => setRegisterSending(false));
   }
@@ -127,18 +136,23 @@ function App() {
     }
   };
 
-  //------------------- Обновление профиля отлажено без ошибки сервера --------------- !!!
+  //------------------- Обновление профиля отлажено --------------
   const [isEditProfileMode, setEditProfileMode] = React.useState(true); // включить режим редактирования
   const [isProfileSending, setProfileSending] = React.useState(false); // ожидание ответа сервера
+  const [isProfileRec, setProfileRec] = React.useState(""); // сообщение сервера
   function onEditProfileMode() {
     setEditProfileMode(true);
   }
   function offEditProfileMode() {
     setEditProfileMode(false);
   }
+  function resetErrorStatusProfile() {
+    setProfileRec(""); // сбросить сообщение об ошибке
+  }
   function onUpdateProfile({ email, name }) {
     setProfileSending(true);
-    //    console.log('Запрос patch на изменение профиля', email, name);
+    console.log("Запрос patch на изменение профиля", email, name);
+    setProfileRec(""); // сбросить сообщение об ошибке
     api
       .setUserInfo({ name, email })
       .then((newUserData) => {
@@ -146,13 +160,15 @@ function App() {
         //    history.push("/"); // на главную
         setCurrentUser(newUserData);
         setEmail(email);
+        setEditProfileMode(false); // снять режим редактирования только при удачном обращении
+        setProfileRec(""); // сбросить сообщение об ошибке
       })
       .catch((err) => {
-        console.log("Ошибка обновления профиля-", err);
+        console.log("Ошибка обновления профиля:", err);
+        setProfileRec(chekErrorType(err));
       })
       .finally(() => {
         setProfileSending(false);
-        setEditProfileMode(false);
       }); // сервер отстрелялся
   }
 
@@ -196,14 +212,26 @@ function App() {
                 isEditProfileMode={isEditProfileMode}
                 onEditProfileMode={onEditProfileMode}
                 offEditProfileMode={offEditProfileMode}
+                errStatus={isProfileRec}
+                resetErrorStatus={resetErrorStatusProfile}
               ></Profile>
             </Route>
           </ProtectedRoute>
           <Route path="/signup">
-            <Register onRegister={onRegister} isSending={isRegisterSending} />
+            <Register
+              onRegister={onRegister}
+              isSending={isRegisterSending}
+              errStatus={isRegisterRec}
+              resetErrorStatus={resetErrorStatusRegister}
+            />
           </Route>
           <Route path="/signin">
-            <Login onLogin={onLogin} isSending={isLoginSending} />
+            <Login
+              onLogin={onLogin}
+              isSending={isLoginSending}
+              errStatus={isLoginRec}
+              resetErrorStatus={resetErrorStatusLogin}
+            />
           </Route>
           <Route path="*">
             <NotFound />

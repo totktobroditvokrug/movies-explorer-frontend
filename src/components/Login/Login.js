@@ -3,14 +3,16 @@ import PageWithForm from "../PageWithForm/PageWithForm";
 import "../Form/Form.css";
 import { useFormWithValidation } from "../../hooks/useForm";
 
-function Login({ onLogin, isSending }) {
+function Login({ onLogin, isSending, errStatus, resetErrorStatus }) {
   const { values, handleChange, resetForm, errors, isValid } =
   useFormWithValidation();
 
 useEffect(() => {
   resetForm({});
 }, [isSending, resetForm]);
-
+useEffect(() => {
+  resetErrorStatus();
+}, []);
 
   function handleSubmit(evt){
     evt.preventDefault();
@@ -28,6 +30,7 @@ useEffect(() => {
         onSubmit={handleSubmit}
         isSending={isSending}
         isValid={isValid}
+        errStatus={errStatus}
       >
         <label className="form__label">E-mail</label>
         <input
