@@ -6,8 +6,8 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react/cjs/react.development";
 
-function Movies({ name, onGetMovies, isFoundMovies, onNextMovies }) {
-  let isSavedMovies = false;
+function SavedMovies({ name, onGetMovies, isFoundMovies, onNextMovies }) {
+  let isSavedMovies = true;
   useEffect(() => {
     // дожидается отработки стэйта setFoundMovies
     console.log("Выбранные фильмы:", isFoundMovies);
@@ -15,10 +15,10 @@ function Movies({ name, onGetMovies, isFoundMovies, onNextMovies }) {
   }, [isFoundMovies]);
   const [isLoading, setLoading] = useState(false);
 
-  const location = useLocation();
-  location.pathname === "/saved-movies"
-    ? (isSavedMovies = true)
-    : (isSavedMovies = false);
+  // const location = useLocation();
+  // location.pathname === "/saved-movies"
+  //   ? (isSavedMovies = true)
+  //   : (isSavedMovies = false);
 
   function onFindMovies() {
     // сюда воткнуть поисковый запрос в переменные функции
@@ -72,4 +72,4 @@ function Movies({ name, onGetMovies, isFoundMovies, onNextMovies }) {
   );
 }
 
-export default Movies;
+export default SavedMovies;

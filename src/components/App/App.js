@@ -199,13 +199,16 @@ function App() {
   function onGetMovies() {
     console.log("тут будут жить запросы фильмов");
     console.log("Массив полученных фильмов:", isDownloadedMovies);
-    // выведем первые 7
+    // выведем первые 6
     setFoundMovies(isDownloadedMovies.slice(0, 6));
   }
-  useEffect(() => {
-    // дожидается отработки стэйта setFoundMovies
-    console.log("Выбранные фильмы:", isFoundMovies);
-  }, [isFoundMovies]);
+
+  function onNextMovies() {  // запрос следующих фильмов
+    const array = isFoundMovies.concat(isDownloadedMovies.slice(isFoundMovies.length, isFoundMovies.length+6));
+  //  setFoundMovies(...isFoundMovies, isDownloadedMovies.slice(5, 11));
+    console.log('добавим еще фильмы в список:', array);
+    setFoundMovies(array);
+  }
 
   //------------------ Разметка ---------------
   return (
@@ -224,6 +227,7 @@ function App() {
                 name="movies"
                 onGetMovies={onGetMovies}
                 isFoundMovies={isFoundMovies}
+                onNextMovies={onNextMovies}
               />
               <Footer />
             </Route>
@@ -231,7 +235,12 @@ function App() {
           <ProtectedRoute path="/saved-movies" loggedIn={loggedIn}>
             <Route path="/saved-movies">
               <Header email={email} />
-              <Movies name="saved-movies" />
+              <Movies
+                name="saved-movies"
+                onGetMovies={onGetMovies}
+                isFoundMovies={isFoundMovies}
+                onNextMovies={onNextMovies}
+              />
               <Footer />
             </Route>
           </ProtectedRoute>
