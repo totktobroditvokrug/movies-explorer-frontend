@@ -196,6 +196,7 @@ function App() {
   }
 
   //----------------------Работа с поиском фильмов -------------
+  const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования
   function onGetMovies() {
     console.log("тут будут жить запросы фильмов");
     console.log("Массив полученных фильмов:", isDownloadedMovies);
@@ -203,10 +204,32 @@ function App() {
     setFoundMovies(isDownloadedMovies.slice(0, 6));
   }
 
-  function onNextMovies() {  // запрос следующих фильмов
-    const array = isFoundMovies.concat(isDownloadedMovies.slice(isFoundMovies.length, isFoundMovies.length+6));
-  //  setFoundMovies(...isFoundMovies, isDownloadedMovies.slice(5, 11));
-    console.log('добавим еще фильмы в список:', array);
+  useEffect(() => {
+    console.log("проверяем кнопку ЕЩЕ:", !!isDownloadedMovies[0]);
+    if (
+      isFoundMovies.length < 30 &&
+      !!isDownloadedMovies[0] &&
+      !!isFoundMovies[0]
+    ) {
+      setNoMoreMovies(false);
+    } else setNoMoreMovies(true);
+  }, [isDownloadedMovies, isFoundMovies]);
+
+  function onNextMovies() {
+    // запрос следующих фильмов
+    let additive = 5;
+    const windowInnerWidth = document.documentElement.clientWidth;
+    if (windowInnerWidth < 700) {additive = 3;}
+    else {additive = 5;}
+
+    const array = isFoundMovies.concat(
+      isDownloadedMovies.slice(
+        isFoundMovies.length,
+        isFoundMovies.length + additive
+      )
+    );
+    //  setFoundMovies(...isFoundMovies, isDownloadedMovies.slice(5, 11));
+    console.log("добавим еще фильмы в список:", array);
     setFoundMovies(array);
   }
 
@@ -228,6 +251,7 @@ function App() {
                 onGetMovies={onGetMovies}
                 isFoundMovies={isFoundMovies}
                 onNextMovies={onNextMovies}
+                isNoMoreMovies={isNoMoreMovies}
               />
               <Footer />
             </Route>

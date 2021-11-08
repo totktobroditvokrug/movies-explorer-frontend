@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import "../Movies/Movies.css";
+import "../MoviesCardList/MoviesCardList.css";
 import "../Form/Form.css";
 import Preloader from "../Preloader/Preloader";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react/cjs/react.development";
 
-function Movies({ name, onGetMovies, isFoundMovies, onNextMovies, isNoMoreMovies }) {
+function MoviesCardList({ name, onGetMovies, isFoundMovies, onNextMovies }) {
   let isSavedMovies = false;
   useEffect(() => {
     // дожидается отработки стэйта setFoundMovies
@@ -65,16 +65,11 @@ function Movies({ name, onGetMovies, isFoundMovies, onNextMovies, isNoMoreMovies
           ))}
       </ul>
       {isLoading && <Preloader />}
-      {
-        !isNoMoreMovies && (
-          <button className="movies__next" type="button" onClick={onNextMovies}>
-            Ещё
-          </button>          
-        )
-      }
-
+      <button className="movies__next" type="button" onClick={onNextMovies}>
+        Ещё
+      </button>
     </div>
   );
 }
 
-export default Movies;
+export default MoviesCardList;
