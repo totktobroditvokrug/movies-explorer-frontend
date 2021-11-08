@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../MoviesCard/MoviesCard.css";
+import { cardImageUrl } from "../../utils/constants";
 
 function MoviesCard({ isSavedMovies, card, link, name }) {
   const [isButtonLike, setButtonLike] = useState(false);
@@ -25,7 +26,7 @@ function MoviesCard({ isSavedMovies, card, link, name }) {
           onClick={clickButton}
         ></button>
       </div>
-      <img src={card.thumbnail} alt="" className="card__poster" />
+      <img src={cardImageUrl+card.image.url} alt="" className="card__poster" />
     </li>
   );
 }

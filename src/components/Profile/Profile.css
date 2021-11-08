@@ -71,6 +71,7 @@
   margin-top: 15vh;
   margin-bottom: 16px;
   transition: 0.5s;
+  cursor: pointer;
 }
 
 .profile__exit {

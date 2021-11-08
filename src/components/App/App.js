@@ -11,6 +11,7 @@ import Register from "../Register/Register";
 import Movies from "../Movies/Movies";
 import * as auth from "../../utils/auth";
 import { api } from "../../utils/api.js";
+import { moviesApi } from "../../utils/MoviesApi";
 import { chekErrorType } from "../../utils/err_const";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import "./App.css";
@@ -18,6 +19,9 @@ import "./App.css";
 function App() {
   const [isRegistered, setRegistered] = useState(false);
 
+  //---------------- Карточки фильмов -------------
+  const [isDownloadedMovies, setDownloadedMovies] = React.useState([]);
+  const [isFoundMovies, setFoundMovies] = React.useState([]);
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
   const [loggedIn, setLoggedIn] = React.useState(false); // При авторизации будем перезаписывать юзера и переполучать токен
@@ -34,6 +38,19 @@ function App() {
         })
         .catch((err) => {
           // console.log('ошибка получения данных пользователя', err);
+        });
+
+      //--------------- Работа с фильмами ---------------
+      console.log("Запрос фильмов");
+      moviesApi
+        .getInitialCards()
+        .then((data) => {
+          console.log("ответ сервера:", data);
+          setDownloadedMovies(data);
+          console.log("Данные пришли:", isDownloadedMovies); // выполняется до загрузки массива
+        })
+        .catch((err) => {
+          console.log("данные не пришли:", err);
         });
     }
   }, [loggedIn]);
@@ -55,7 +72,7 @@ function App() {
       .login({ email, password })
       .then((res) => {
         const token = res.token;
-//        console.log("авторизация. токен от сервера такой:", token);
+        //        console.log("авторизация. токен от сервера такой:", token);
         if (!!token) {
           // если токен от сервера пришел
           localStorage.setItem("jwt", token);
@@ -74,7 +91,7 @@ function App() {
       .finally(() => setLoginSending(false));
   }
 
-  // ---------------- Регистрация отлажена ----------------- 
+  // ---------------- Регистрация отлажена -----------------
   const [isRegisterSending, setRegisterSending] = React.useState(false); // ожидание ответа сервера
   const [isRegisterRec, setRegisterRec] = React.useState(""); // сообщение сервера
   function resetErrorStatusRegister() {
@@ -178,6 +195,18 @@ function App() {
     setRegistered(false);
   }
 
+  //----------------------Работа с поиском фильмов -------------
+  function onGetMovies() {
+    console.log("тут будут жить запросы фильмов");
+    console.log("Массив полученных фильмов:", isDownloadedMovies);
+    // выведем первые 7
+    setFoundMovies(isDownloadedMovies.slice(0, 6));
+  }
+  useEffect(() => {
+    // дожидается отработки стэйта setFoundMovies
+    console.log("Выбранные фильмы:", isFoundMovies);
+  }, [isFoundMovies]);
+
   //------------------ Разметка ---------------
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -191,7 +220,11 @@ function App() {
           <ProtectedRoute path="/movies" loggedIn={loggedIn}>
             <Route path="/movies">
               <Header email={email} />
-              <Movies name="movies" />
+              <Movies
+                name="movies"
+                onGetMovies={onGetMovies}
+                isFoundMovies={isFoundMovies}
+              />
               <Footer />
             </Route>
           </ProtectedRoute>
