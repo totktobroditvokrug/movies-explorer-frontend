@@ -19,9 +19,9 @@ import "./App.css";
 function App() {
   const [isRegistered, setRegistered] = useState(false);
 
-  //---------------- Карточки фильмов -------------
+  //---------------- Все загруженные карточки фильмов -------------
   const [isDownloadedMovies, setDownloadedMovies] = React.useState([]);
-  const [isFoundMovies, setFoundMovies] = React.useState([]);
+  
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
   const [loggedIn, setLoggedIn] = React.useState(false); // При авторизации будем перезаписывать юзера и переполучать токен
@@ -196,24 +196,31 @@ function App() {
   }
 
   //----------------------Работа с поиском фильмов -------------
+  const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском
+  const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // отображаемые
+
   const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования
-  function onGetMovies() {
-    console.log("тут будут жить запросы фильмов");
+  function onGetMovies(searchString) {
+    const regexp = new RegExp(`${searchString}`, 'gi');
+    console.log("регулярное выражение:", regexp);
     console.log("Массив полученных фильмов:", isDownloadedMovies);
+    const arrFoundMovies = isDownloadedMovies.filter((item) => regexp.test(item.description));
+    console.log("Массив отфильтрованных фильмов:", arrFoundMovies);    
     // выведем первые 6
-    setFoundMovies(isDownloadedMovies.slice(0, 6));
+    setFoundMovies(arrFoundMovies); // обойтись без arrFoundMovies
+    setDisplayedMovies(arrFoundMovies.slice(0, 6));
   }
 
-  useEffect(() => {
-    console.log("проверяем кнопку ЕЩЕ:", !!isDownloadedMovies[0]);
+  useEffect(() => {  // Логика появления кнопки ЕЩЕ
+    console.log("проверяем кнопку ЕЩЕ:", !!isFoundMovies[0]);
     if (
-      isFoundMovies.length < 30 &&
-      !!isDownloadedMovies[0] &&
+      isDisplayedMovies.length < isFoundMovies.length && // если отображаемых меньше найденных
+      !!isDisplayedMovies[0] &&
       !!isFoundMovies[0]
     ) {
-      setNoMoreMovies(false);
+      setNoMoreMovies(false); // вешаем кнопку ЕЩЕ
     } else setNoMoreMovies(true);
-  }, [isDownloadedMovies, isFoundMovies]);
+  }, [isDisplayedMovies, isFoundMovies]);
 
   function onNextMovies() {
     // запрос следующих фильмов
@@ -222,15 +229,15 @@ function App() {
     if (windowInnerWidth < 700) {additive = 3;}
     else {additive = 5;}
 
-    const array = isFoundMovies.concat(
-      isDownloadedMovies.slice(
-        isFoundMovies.length,
-        isFoundMovies.length + additive
+    const array = isDisplayedMovies.concat(
+      isFoundMovies.slice(
+        isDisplayedMovies.length,
+        isDisplayedMovies.length + additive
       )
     );
     //  setFoundMovies(...isFoundMovies, isDownloadedMovies.slice(5, 11));
-    console.log("добавим еще фильмы в список:", array);
-    setFoundMovies(array);
+    console.log("добавим еще фильмы в отображаемый список:", array);
+    setDisplayedMovies(array);
   }
 
   //------------------ Разметка ---------------
@@ -249,7 +256,7 @@ function App() {
               <Movies
                 name="movies"
                 onGetMovies={onGetMovies}
-                isFoundMovies={isFoundMovies}
+                isDisplayedMovies={isDisplayedMovies}
                 onNextMovies={onNextMovies}
                 isNoMoreMovies={isNoMoreMovies}
               />
@@ -262,7 +269,7 @@ function App() {
               <Movies
                 name="saved-movies"
                 onGetMovies={onGetMovies}
-                isFoundMovies={isFoundMovies}
+                isDisplayedMovies={isDisplayedMovies}
                 onNextMovies={onNextMovies}
               />
               <Footer />

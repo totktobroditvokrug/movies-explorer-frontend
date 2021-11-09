@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../MoviesCard/MoviesCard.css";
 import { cardImageUrl } from "../../utils/constants";
 
-function MoviesCard({ isSavedMovies, card, link, name }) {
+function MoviesCard({ isSavedMovies, card }) {
   const [isButtonLike, setButtonLike] = useState(false);
 
   function toggleLike() {

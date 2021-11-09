@@ -6,13 +6,17 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react/cjs/react.development";
 
-function Movies({ name, onGetMovies, isFoundMovies, onNextMovies, isNoMoreMovies }) {
+function Movies({ name, onGetMovies, isDisplayedMovies, onNextMovies, isNoMoreMovies }) {
+  const [isSearchString, setSearchString] = useState(''); // стэйт сроки поиска
+  function handleChangeSearch(event) {
+    setSearchString(event.target.value);
+  }
   let isSavedMovies = false;
   useEffect(() => {
     // дожидается отработки стэйта setFoundMovies
-    console.log("Выбранные фильмы:", isFoundMovies);
+    console.log("Выбранные фильмы:", isDisplayedMovies);
     setLoading(false); // выключить прелоадер
-  }, [isFoundMovies]);
+  }, [isDisplayedMovies]);
   const [isLoading, setLoading] = useState(false);
 
   const location = useLocation();
@@ -23,19 +27,19 @@ function Movies({ name, onGetMovies, isFoundMovies, onNextMovies, isNoMoreMovies
   function onFindMovies() {
     // сюда воткнуть поисковый запрос в переменные функции
     setLoading(true); // включить прелоадер
-    onGetMovies();
+    onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
   }
   const [isShortFilm, setShortFilm] = useState(false);
 
   function toggleSelector() {
     setShortFilm(!isShortFilm);
-    console.log("Массив выбранных фильмов:", isFoundMovies);
+    console.log("Массив выбранных фильмов:", isDisplayedMovies);
   }
 
   return (
     <div className="body movies">
       <form className="movies__find" name={name} noValidate>
-        <input type="text" className="movies__input" placeholder="Фильм" />
+        <input type="text" className="movies__input" placeholder="Фильм" onChange={handleChangeSearch}/>
         <button
           className="movies__button-find"
           type="button"
@@ -55,8 +59,8 @@ function Movies({ name, onGetMovies, isFoundMovies, onNextMovies, isNoMoreMovies
         <p className="movies__text">Короткометражки</p>
       </div>
       <ul className="movies__list">
-        {!!isFoundMovies &&
-          isFoundMovies.map((card) => (
+        {!!isDisplayedMovies &&
+          isDisplayedMovies.map((card) => (
             <MoviesCard
               key={card.id}
               isSavedMovies={isSavedMovies}
