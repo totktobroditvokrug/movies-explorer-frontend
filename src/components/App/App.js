@@ -14,6 +14,7 @@ import { api } from "../../utils/api.js";
 import { moviesApi } from "../../utils/MoviesApi";
 import { chekErrorType } from "../../utils/err_const";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import { ADD_NARROW, ADD_WIDE, WIDTH_NARROW } from "../../utils/constants";
 import "./App.css";
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
 
   //---------------- Все загруженные карточки фильмов -------------
   const [isDownloadedMovies, setDownloadedMovies] = React.useState([]);
-  
+
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
   const [loggedIn, setLoggedIn] = React.useState(false); // При авторизации будем перезаписывать юзера и переполучать токен
@@ -198,20 +199,40 @@ function App() {
   //----------------------Работа с поиском фильмов -------------
   const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском
   const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // отображаемые
-
+  const [isLengthMovies, setLengthMovies] = React.useState({
+    add: ADD_WIDE,
+    left: 0,
+  }); // остаток найденных
   const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования
+  let additive = ADD_WIDE;
+  const windowInnerWidth = document.documentElement.clientWidth;
+
   function onGetMovies(searchString) {
-    const regexp = new RegExp(`${searchString}`, 'gi');
+    // по кнопке ПОИСК
+    const regexp = new RegExp(`${searchString}`, "gi");
     console.log("регулярное выражение:", regexp);
     console.log("Массив полученных фильмов:", isDownloadedMovies);
-    const arrFoundMovies = isDownloadedMovies.filter((item) => regexp.test(item.description));
-    console.log("Массив отфильтрованных фильмов:", arrFoundMovies);    
+    const arrFoundMovies = isDownloadedMovies.filter(
+      (item) =>
+        regexp.test(item.description) ||
+        regexp.test(item.nameRU) ||
+        regexp.test(item.nameEN)
+    );
+    console.log("Массив отфильтрованных фильмов:", arrFoundMovies);
     // выведем первые 6
     setFoundMovies(arrFoundMovies); // обойтись без arrFoundMovies
     setDisplayedMovies(arrFoundMovies.slice(0, 6));
   }
 
-  useEffect(() => {  // Логика появления кнопки ЕЩЕ
+  useEffect(() => {
+    // Логика появления кнопки ЕЩЕ
+    
+    if (windowInnerWidth < WIDTH_NARROW) {
+      additive = ADD_NARROW;
+    } else {
+      additive = ADD_WIDE;
+    }
+    
     console.log("проверяем кнопку ЕЩЕ:", !!isFoundMovies[0]);
     if (
       isDisplayedMovies.length < isFoundMovies.length && // если отображаемых меньше найденных
@@ -220,14 +241,14 @@ function App() {
     ) {
       setNoMoreMovies(false); // вешаем кнопку ЕЩЕ
     } else setNoMoreMovies(true);
+    setLengthMovies({
+      add: additive,
+      left: isFoundMovies.length - isDisplayedMovies.length,
+    });
   }, [isDisplayedMovies, isFoundMovies]);
 
   function onNextMovies() {
-    // запрос следующих фильмов
-    let additive = 5;
-    const windowInnerWidth = document.documentElement.clientWidth;
-    if (windowInnerWidth < 700) {additive = 3;}
-    else {additive = 5;}
+    // запрос следующих фильмов по кнопке ЕЩЕ
 
     const array = isDisplayedMovies.concat(
       isFoundMovies.slice(
@@ -235,7 +256,7 @@ function App() {
         isDisplayedMovies.length + additive
       )
     );
-    //  setFoundMovies(...isFoundMovies, isDownloadedMovies.slice(5, 11));
+
     console.log("добавим еще фильмы в отображаемый список:", array);
     setDisplayedMovies(array);
   }
@@ -259,6 +280,7 @@ function App() {
                 isDisplayedMovies={isDisplayedMovies}
                 onNextMovies={onNextMovies}
                 isNoMoreMovies={isNoMoreMovies}
+                isLengthMovies={isLengthMovies}
               />
               <Footer />
             </Route>

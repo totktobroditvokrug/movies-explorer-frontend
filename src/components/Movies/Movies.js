@@ -6,9 +6,17 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react/cjs/react.development";
 
-function Movies({ name, onGetMovies, isDisplayedMovies, onNextMovies, isNoMoreMovies }) {
-  const [isSearchString, setSearchString] = useState(''); // стэйт сроки поиска
+function Movies({
+  name,
+  onGetMovies,
+  isDisplayedMovies,
+  onNextMovies,
+  isNoMoreMovies,
+  isLengthMovies,
+}) {
+  const [isSearchString, setSearchString] = useState(""); // стэйт сроки поиска
   function handleChangeSearch(event) {
+    //    event.preventDefault();
     setSearchString(event.target.value);
   }
   let isSavedMovies = false;
@@ -24,7 +32,8 @@ function Movies({ name, onGetMovies, isDisplayedMovies, onNextMovies, isNoMoreMo
     ? (isSavedMovies = true)
     : (isSavedMovies = false);
 
-  function onFindMovies() {
+  function onFindMovies(event) {
+    event.preventDefault();
     // сюда воткнуть поисковый запрос в переменные функции
     setLoading(true); // включить прелоадер
     onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
@@ -39,10 +48,15 @@ function Movies({ name, onGetMovies, isDisplayedMovies, onNextMovies, isNoMoreMo
   return (
     <div className="body movies">
       <form className="movies__find" name={name} noValidate>
-        <input type="text" className="movies__input" placeholder="Фильм" onChange={handleChangeSearch}/>
+        <input
+          type="text"
+          className="movies__input"
+          placeholder="Фильм"
+          onChange={handleChangeSearch}
+        />
         <button
           className="movies__button-find"
-          type="button"
+          type="submit"
           onClick={onFindMovies}
         >
           Поиск
@@ -69,14 +83,11 @@ function Movies({ name, onGetMovies, isDisplayedMovies, onNextMovies, isNoMoreMo
           ))}
       </ul>
       {isLoading && <Preloader />}
-      {
-        !isNoMoreMovies && (
-          <button className="movies__next" type="button" onClick={onNextMovies}>
-            Ещё
-          </button>          
-        )
-      }
-
+      {!isNoMoreMovies && (
+        <button className="movies__next" type="button" onClick={onNextMovies}>
+          {`Ещё ${isLengthMovies.add} из ${isLengthMovies.left}`}
+        </button>
+      )}
     </div>
   );
 }

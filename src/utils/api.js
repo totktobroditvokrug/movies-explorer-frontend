@@ -1,4 +1,4 @@
-import { userUrl, cardUrl,  likesUrl, baseUrl } from '../utils/constants'
+import { userUrl, cardUrl,  likesUrl, baseUrl } from '../utils/constants';
 
 class Api {
     constructor(config) {
