@@ -20,6 +20,7 @@ export const checkToken = (token) => {
   }
 
 export const register = ({name, email, password}) => {
+  console.log('регистрация по адресу:', `${BASE_URL}/signup`);
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {

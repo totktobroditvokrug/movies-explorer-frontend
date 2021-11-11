@@ -13,7 +13,9 @@ function Movies({
   onNextMovies,
   isNoMoreMovies,
   isLengthMovies,
+  сlickButton, // клик по кнопке лайка или крестика.
 }) {
+
   const [isSearchString, setSearchString] = useState(""); // стэйт сроки поиска
   function handleChangeSearch(event) {
     //    event.preventDefault();
@@ -42,7 +44,7 @@ function Movies({
 
   function toggleSelector() {
     setShortFilm(!isShortFilm);
-    console.log("Массив выбранных фильмов:", isDisplayedMovies);
+    console.log("переключатель длительности");
   }
 
   return (
@@ -79,6 +81,7 @@ function Movies({
               key={card.id}
               isSavedMovies={isSavedMovies}
               card={card}
+              сlickButton={сlickButton}
             />
           ))}
       </ul>

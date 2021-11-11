@@ -11,17 +11,21 @@ import Register from "../Register/Register";
 import Movies from "../Movies/Movies";
 import * as auth from "../../utils/auth";
 import { api } from "../../utils/api.js";
-import { moviesApi } from "../../utils/MoviesApi";
+import { moviesApi } from "../../utils/MoviesApi"; // внешний апи с фильмами
+import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { chekErrorType } from "../../utils/err_const";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { ADD_NARROW, ADD_WIDE, WIDTH_NARROW } from "../../utils/constants";
+import { cardImageUrl } from "../../utils/constants";
+
 import "./App.css";
 
 function App() {
   const [isRegistered, setRegistered] = useState(false);
 
   //---------------- Все загруженные карточки фильмов -------------
-  const [isDownloadedMovies, setDownloadedMovies] = React.useState([]);
+  const [isDownloadedMovies, setDownloadedMovies] = React.useState([]); // внешний список фильмов
+  const [isMainMovies, setMainMovies] = React.useState([]); // сптсок фильмов на внутреннем сервере
 
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
@@ -43,12 +47,23 @@ function App() {
 
       //--------------- Работа с фильмами ---------------
       console.log("Запрос фильмов");
-      moviesApi
+      moviesApi // запрос всех фильмов с внешнего апи
         .getInitialCards()
         .then((data) => {
-          console.log("ответ сервера:", data);
+          console.log("ответ внешнего сервера:", data);
           setDownloadedMovies(data);
           console.log("Данные пришли:", isDownloadedMovies); // выполняется до загрузки массива
+        })
+        .catch((err) => {
+          console.log("данные не пришли:", err);
+        });
+
+      mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
+        .getInitialCards()
+        .then((data) => {
+          console.log("фильмы на своем сервере:", data);
+          setMainMovies(data);
+          console.log("Данные пришли:", isMainMovies); // выполняется до загрузки массива
         })
         .catch((err) => {
           console.log("данные не пришли:", err);
@@ -204,7 +219,7 @@ function App() {
     left: 0,
   }); // остаток найденных
   const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования
-  let additive = ADD_WIDE;
+  let additive = ADD_WIDE; // Величина добавки фильмов в ЕЩЕ
   const windowInnerWidth = document.documentElement.clientWidth;
 
   function onGetMovies(searchString) {
@@ -226,13 +241,13 @@ function App() {
 
   useEffect(() => {
     // Логика появления кнопки ЕЩЕ
-    
+
     if (windowInnerWidth < WIDTH_NARROW) {
       additive = ADD_NARROW;
     } else {
       additive = ADD_WIDE;
     }
-    
+
     console.log("проверяем кнопку ЕЩЕ:", !!isFoundMovies[0]);
     if (
       isDisplayedMovies.length < isFoundMovies.length && // если отображаемых меньше найденных
@@ -261,6 +276,55 @@ function App() {
     setDisplayedMovies(array);
   }
 
+  //----------------- Обработка лайка фильма -------------
+
+  function onDeleteAndDislike({ card, setButtonLike }) {
+    console.log("будем удалять фильм", card);
+    isDisplayedMovies.forEach((item) => {
+      item.id === card.id
+        ? setButtonLike(false)
+        : console.log("не нашли этот фильм:", item.id, card._id);
+    });
+
+    
+    // mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
+    // .deleteCard(movie._id)
+    // .then((res) => {
+    //   console.log("удалили фильм:", res);
+    //   card.like = false; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
+    //   setButtonLike(false);
+    // })
+    // .catch((err) => {
+    //   console.log("фильм не сохранился:", err);
+    // });
+  }
+
+  function onSaveAndLike({ card, setButtonLike }) {
+    console.log("ткнули кнопку лайка. По ней будем сохранять:", card);
+    let data = Object.assign({}, card);
+    data.movieId = card.id;
+    data.image = cardImageUrl + card.image.url;
+    data.trailer = card.trailerLink;
+    data.thumbnail = cardImageUrl + card.image.formats.thumbnail.url;
+    console.log(data);
+    mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
+      .setNewCard(data)
+      .then((res) => {
+        console.log("сохранили фильм:", res);
+        card.like = true; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
+        setButtonLike(true);
+      })
+      .catch((err) => {
+        console.log("фильм не сохранился:", err);
+      });
+  }
+
+  function onLikeMovie({ card, setButtonLike }) {
+    !!card.like
+      ? onDeleteAndDislike({ card, setButtonLike })
+      : onSaveAndLike({ card, setButtonLike });
+  }
+
   //------------------ Разметка ---------------
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -281,6 +345,7 @@ function App() {
                 onNextMovies={onNextMovies}
                 isNoMoreMovies={isNoMoreMovies}
                 isLengthMovies={isLengthMovies}
+                сlickButton={onLikeMovie}
               />
               <Footer />
             </Route>

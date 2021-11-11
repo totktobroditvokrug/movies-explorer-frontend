@@ -1,9 +1,9 @@
-// export const baseUrl = 'http://localhost:3030';   // адрес локального API сервера
-export const baseUrl = 'https://api.nekto.lukas.nomoredomains.work';
+export const baseUrl = 'http://localhost:5000';   // адрес локального API сервера
+// export const baseUrl = 'https://api.nekto.lukas.nomoredomains.work';
 export const cardImageUrl = 'https://api.nomoreparties.co';
 
 export const userUrl = 'users/me';
-export const cardUrl = 'cards';
+export const cardUrl = 'movies';
 export const avatarUrl = userUrl + '/avatar';
 export const likesUrl = 'likes';  // адрес карточки без idCard
 
