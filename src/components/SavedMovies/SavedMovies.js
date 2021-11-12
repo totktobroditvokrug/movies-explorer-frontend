@@ -1,74 +1,46 @@
 import React, { useState } from "react";
-import "../Movies/Movies.css";
+import "../SavedMovies/SavedMovies.css";
 import "../Form/Form.css";
-import Preloader from "../Preloader/Preloader";
-import MoviesCard from "../MoviesCard/MoviesCard";
-import { useLocation } from "react-router-dom";
+import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import { useEffect } from "react/cjs/react.development";
+import { mainApi } from "../../utils/MainApi"; // апи для пользователя
+import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 
-function SavedMovies({ name, onGetMovies, isFoundMovies, onNextMovies }) {
-  let isSavedMovies = true;
-  useEffect(() => {
-    // дожидается отработки стэйта setFoundMovies
-    console.log("Выбранные фильмы:", isFoundMovies);
-    setLoading(false); // выключить прелоадер
-  }, [isFoundMovies]);
-  const [isLoading, setLoading] = useState(false);
-
-  // const location = useLocation();
-  // location.pathname === "/saved-movies"
-  //   ? (isSavedMovies = true)
-  //   : (isSavedMovies = false);
-
-  function onFindMovies() {
-    // сюда воткнуть поисковый запрос в переменные функции
-    setLoading(true); // включить прелоадер
-    onGetMovies();
+function SavedMovies({ isMainMovies }) {
+  const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском
+  function onGetSavedMovies(searchString) {
+    // по кнопке ПОИСК на вкладке ФИЛЬМЫ
+    const arrFoundMovies = getMoviesFromArray(searchString, isMainMovies);
+    setFoundMovies(arrFoundMovies); //
   }
-  const [isShortFilm, setShortFilm] = useState(false);
 
-  function toggleSelector() {
-    setShortFilm(!isShortFilm);
-    console.log("Массив выбранных фильмов:", isFoundMovies);
+  function onDeleteAndDislike({ card }) {
+    console.log("Будем удалять фильм:", card);
+    mainApi 
+      .deleteCard(card._id)
+      .then((res) => {
+        console.log("удалили фильм:", isFoundMovies.findIndex((item) => item.movieId == res.movieId));
+        let newArray = isFoundMovies.slice();
+        const index = isFoundMovies.findIndex((item) => item.movieId == res.movieId); // удаляемый индекс
+        newArray.splice(index, 1);
+        setFoundMovies(newArray);
+
+ //       card.like = false; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
+//        setButtonLike(false);
+      })
+      .catch((err) => {
+        console.log("фильм не удалился:", err);
+      });
   }
 
   return (
-    <div className="body movies">
-      <form className="movies__find" name={name} noValidate>
-        <input type="text" className="movies__input" placeholder="Фильм" />
-        <button
-          className="movies__button-find"
-          type="button"
-          onClick={onFindMovies}
-        >
-          Поиск
-        </button>
-      </form>
-      <div className="movies__select">
-        <button
-          className={`movies__button-select ${
-            isShortFilm ? "" : "movies__button-select_off "
-          }`}
-          type="button"
-          onClick={toggleSelector}
-        />
-        <p className="movies__text">Короткометражки</p>
-      </div>
-      <ul className="movies__list">
-        {!!isFoundMovies &&
-          isFoundMovies.map((card) => (
-            <MoviesCard
-              key={card.id}
-              isSavedMovies={isSavedMovies}
-              card={card}
-            />
-          ))}
-      </ul>
-      {isLoading && <Preloader />}
-      <button className="movies__next" type="button" onClick={onNextMovies}>
-        Ещё
-      </button>
-    </div>
+    <MoviesCardList
+      name="saved-movies"
+      onGetMovies={onGetSavedMovies}
+      isDisplayedMovies={isFoundMovies}
+      сlickButton={onDeleteAndDislike}
+      isSavedMovies={true}
+    />
   );
 }
 

@@ -8,7 +8,8 @@ import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
-import Movies from "../Movies/Movies";
+import Movies from "../Movies/Movies"; 
+import SavedMovies from "../SavedMovies/SavedMovies";
 import * as auth from "../../utils/auth";
 import { api } from "../../utils/api.js";
 import { moviesApi } from "../../utils/MoviesApi"; // внешний апи с фильмами
@@ -25,7 +26,8 @@ function App() {
 
   //---------------- Все загруженные карточки фильмов -------------
   const [isDownloadedMovies, setDownloadedMovies] = React.useState([]); // внешний список фильмов
-  const [isMainMovies, setMainMovies] = React.useState([]); // сптсок фильмов на внутреннем сервере
+  const [isMainMovies, setMainMovies] = React.useState([]); // список фильмов на внутреннем сервере
+  const [isIdSavedMovies, setIdSavedMovies] = React.useState([]); // номера сохраненных фильмов
 
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
@@ -42,7 +44,7 @@ function App() {
           setCurrentUser(data);
         })
         .catch((err) => {
-          // console.log('ошибка получения данных пользователя', err);
+           console.log('ошибка получения данных пользователя', err);
         });
 
       //--------------- Работа с фильмами ---------------
@@ -50,9 +52,8 @@ function App() {
       moviesApi // запрос всех фильмов с внешнего апи
         .getInitialCards()
         .then((data) => {
-          console.log("ответ внешнего сервера:", data);
           setDownloadedMovies(data);
-          console.log("Данные пришли:", isDownloadedMovies); // выполняется до загрузки массива
+          console.log("Данные с внешними фильмами пришли:", data); // выполняется до загрузки массива
         })
         .catch((err) => {
           console.log("данные не пришли:", err);
@@ -211,134 +212,18 @@ function App() {
     setRegistered(false);
   }
 
-  //----------------------Работа с поиском фильмов -------------
-  const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском
-  const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // отображаемые
-  const [isLengthMovies, setLengthMovies] = React.useState({
-    add: ADD_WIDE,
-    left: 0,
-  }); // остаток найденных
-  const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования
-  let additive = ADD_WIDE; // Величина добавки фильмов в ЕЩЕ
-  const windowInnerWidth = document.documentElement.clientWidth; // ширина окна для корректировки выдачи
-
-  function onGetMovies(searchString) {
-    // по кнопке ПОИСК
-    const regexp = new RegExp(`${searchString}`, "gi");
-    console.log("регулярное выражение:", regexp);
-    console.log("Массив полученных фильмов:", isDownloadedMovies);
-    const arrFoundMovies = isDownloadedMovies.filter(
-      (item) =>
-        regexp.test(item.description) ||
-        regexp.test(item.nameRU) ||
-        regexp.test(item.nameEN)
-    );
-    console.log("Массив отфильтрованных фильмов:", arrFoundMovies);
-    // выведем первые 6
-    setFoundMovies(arrFoundMovies); // обойтись без arrFoundMovies
-    setDisplayedMovies(arrFoundMovies.slice(0, 6));
-  }
-
+//----------------- Обработка лайка фильма -------------
   useEffect(() => {
-    // Логика появления кнопки ЕЩЕ
-
-    if (windowInnerWidth < WIDTH_NARROW) {
-      additive = ADD_NARROW;
-    } else {
-      additive = ADD_WIDE;
-    }
-
-    console.log("проверяем кнопку ЕЩЕ:", !!isFoundMovies[0]);
-    if (
-      isDisplayedMovies.length < isFoundMovies.length && // если отображаемых меньше найденных
-      !!isDisplayedMovies[0] &&
-      !!isFoundMovies[0]
-    ) {
-      setNoMoreMovies(false); // вешаем кнопку ЕЩЕ
-    } else setNoMoreMovies(true);
-    setLengthMovies({
-      add: additive,
-      left: isFoundMovies.length - isDisplayedMovies.length,
+    // Логика появления первоначальных лайков setIdSavedMovies
+    let arrayNumber = [];
+    isMainMovies.forEach((item) => { // перебираем фильмы с сервера
+      arrayNumber=[...arrayNumber, {movieId: item.movieId, _id: item._id}]
     });
-  }, [isDisplayedMovies, isFoundMovies, isMainMovies]);
+    console.log('номера сохраненных фильмов:', arrayNumber);
+    setIdSavedMovies(arrayNumber);
+  }, [isMainMovies]);
 
-  useEffect(() => {
-    // Логика появления первоначальных лайков
-    isDisplayedMovies.forEach((data) => { // если среди показанных фильмов будет номер сохраненного
-      console.log('перебор найденных фильмов для лайков:', data);
-      data.like = false;
-      isMainMovies.forEach((item) => {
-//        console.log('перебор сохраненных фильмов для лайков:', item);
-          if(item.movieId == data.id){// ставим ему лайк и идентификатор Монги
-          data.like = true; data._id=item._id;
-          console.log('переделали массив выданного фильма:', data);
-        }
-      });
-    });
-  }, [isDisplayedMovies, isMainMovies]);
-
-  function onNextMovies() {
-    // запрос следующих фильмов по кнопке ЕЩЕ
-
-    const array = isDisplayedMovies.concat(
-      isFoundMovies.slice(
-        isDisplayedMovies.length,
-        isDisplayedMovies.length + additive
-      )
-    );
-
-    console.log("добавим еще фильмы в отображаемый список:", array);
-    setDisplayedMovies(array);
-  }
-
-  //----------------- Обработка лайка фильма -------------
-
-  function onDeleteAndDislike({ card, setButtonLike }) {
-    // isDisplayedMovies.find((item) => item.id == card.id) // 
-    //   ? console.log("будем удалять фильм", card)
-    //   : console.log("фильм среди сохраненных не найден");
-    console.log('Будем удалять фильм:', card);
-    mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
-    .deleteCard(card._id)
-    .then((res) => {
-      console.log("удалили фильм:", res);
-      card.like = false; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
-      setButtonLike(false);
-    })
-    .catch((err) => {
-      console.log("фильм не удалился:", err);
-    });
-  }
-
-  function onSaveAndLike({ card, setButtonLike }) {
-    console.log("ткнули кнопку лайка. По ней будем сохранять:", card);
-    let data = Object.assign({}, card);
-    data.movieId = card.id;
-    data.image = cardImageUrl + card.image.url;
-    data.trailer = card.trailerLink;
-    data.thumbnail = cardImageUrl + card.image.formats.thumbnail.url;
-    console.log(data);
-    mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
-      .setNewCard(data)
-      .then((res) => {
-        console.log("сохранили фильм:", res);
-        card.like = true; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
-        card._id = res._id; // присвоим идентификатор из БД
-        setButtonLike(true);
-      })
-      .catch((err) => {
-        console.log("фильм не сохранился:", err);
-      });
-  }
-
-  function onLikeMovie({ card, setButtonLike }) {
-    console.log('Обрабатываем клик по:', card.id, 'состояние лайка:', !!card.like);
-    !!card.like
-      ? onDeleteAndDislike({ card, setButtonLike }) // если был лайк- пробуем удалить из избранного
-      : onSaveAndLike({ card, setButtonLike });
-  }
-
-  //------------------ Разметка ---------------
+//------------------ Разметка ---------------
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div>
@@ -352,13 +237,8 @@ function App() {
             <Route path="/movies">
               <Header email={email} />
               <Movies
-                name="movies"
-                onGetMovies={onGetMovies}
-                isDisplayedMovies={isDisplayedMovies}
-                onNextMovies={onNextMovies}
-                isNoMoreMovies={isNoMoreMovies}
-                isLengthMovies={isLengthMovies}
-                сlickButton={onLikeMovie}
+                isDownloadedMovies={isDownloadedMovies} // все загруженные фильмы с внешнего сервера
+                isIdSavedMovies={isIdSavedMovies} // массив сохраненных фильмов
               />
               <Footer />
             </Route>
@@ -366,11 +246,8 @@ function App() {
           <ProtectedRoute path="/saved-movies" loggedIn={loggedIn}>
             <Route path="/saved-movies">
               <Header email={email} />
-              <Movies
-                name="saved-movies"
-                onGetMovies={onGetMovies}
-                isDisplayedMovies={isDisplayedMovies}
-                onNextMovies={onNextMovies}
+              <SavedMovies
+                isMainMovies={isMainMovies} // пока выдадим все сохраненные
               />
               <Footer />
             </Route>
