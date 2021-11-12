@@ -220,7 +220,7 @@ function App() {
   }); // остаток найденных
   const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования
   let additive = ADD_WIDE; // Величина добавки фильмов в ЕЩЕ
-  const windowInnerWidth = document.documentElement.clientWidth;
+  const windowInnerWidth = document.documentElement.clientWidth; // ширина окна для корректировки выдачи
 
   function onGetMovies(searchString) {
     // по кнопке ПОИСК
@@ -260,7 +260,22 @@ function App() {
       add: additive,
       left: isFoundMovies.length - isDisplayedMovies.length,
     });
-  }, [isDisplayedMovies, isFoundMovies]);
+  }, [isDisplayedMovies, isFoundMovies, isMainMovies]);
+
+  useEffect(() => {
+    // Логика появления первоначальных лайков
+    isDisplayedMovies.forEach((data) => { // если среди показанных фильмов будет номер сохраненного
+      console.log('перебор найденных фильмов для лайков:', data);
+      data.like = false;
+      isMainMovies.forEach((item) => {
+//        console.log('перебор сохраненных фильмов для лайков:', item);
+          if(item.movieId == data.id){// ставим ему лайк и идентификатор Монги
+          data.like = true; data._id=item._id;
+          console.log('переделали массив выданного фильма:', data);
+        }
+      });
+    });
+  }, [isDisplayedMovies, isMainMovies]);
 
   function onNextMovies() {
     // запрос следующих фильмов по кнопке ЕЩЕ
@@ -279,24 +294,20 @@ function App() {
   //----------------- Обработка лайка фильма -------------
 
   function onDeleteAndDislike({ card, setButtonLike }) {
-    console.log("будем удалять фильм", card);
-    isDisplayedMovies.forEach((item) => {
-      item.id === card.id
-        ? setButtonLike(false)
-        : console.log("не нашли этот фильм:", item.id, card._id);
+    // isDisplayedMovies.find((item) => item.id == card.id) // 
+    //   ? console.log("будем удалять фильм", card)
+    //   : console.log("фильм среди сохраненных не найден");
+    console.log('Будем удалять фильм:', card);
+    mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
+    .deleteCard(card._id)
+    .then((res) => {
+      console.log("удалили фильм:", res);
+      card.like = false; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
+      setButtonLike(false);
+    })
+    .catch((err) => {
+      console.log("фильм не удалился:", err);
     });
-
-    
-    // mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
-    // .deleteCard(movie._id)
-    // .then((res) => {
-    //   console.log("удалили фильм:", res);
-    //   card.like = false; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
-    //   setButtonLike(false);
-    // })
-    // .catch((err) => {
-    //   console.log("фильм не сохранился:", err);
-    // });
   }
 
   function onSaveAndLike({ card, setButtonLike }) {
@@ -312,6 +323,7 @@ function App() {
       .then((res) => {
         console.log("сохранили фильм:", res);
         card.like = true; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
+        card._id = res._id; // присвоим идентификатор из БД
         setButtonLike(true);
       })
       .catch((err) => {
@@ -320,8 +332,9 @@ function App() {
   }
 
   function onLikeMovie({ card, setButtonLike }) {
+    console.log('Обрабатываем клик по:', card.id, 'состояние лайка:', !!card.like);
     !!card.like
-      ? onDeleteAndDislike({ card, setButtonLike })
+      ? onDeleteAndDislike({ card, setButtonLike }) // если был лайк- пробуем удалить из избранного
       : onSaveAndLike({ card, setButtonLike });
   }
 

@@ -3,14 +3,15 @@ import "../MoviesCard/MoviesCard.css";
 import { cardImageUrl } from "../../utils/constants";
 
 function MoviesCard({ isSavedMovies, card, сlickButton, }) {
-  const [isButtonLike, setButtonLike] = useState(false); // работа с лайком перенести в card.like
+  const [isButtonLike, setButtonLike] = useState(!!card.like); // работа с лайком перенести в card.like
 
   function handleClick() {
   //  console.log('кнопка в карточке:', card);
     сlickButton({card, setButtonLike});
   }
   useEffect(() => {
-    console.log('поставили лайк:', card.like);
+    console.log('изменили лайк:', card.like);
+     !!card.like ? setButtonLike(true) : setButtonLike(false);
   }, [!!card.like]);
 
 
