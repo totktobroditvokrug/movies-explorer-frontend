@@ -8,7 +8,7 @@ import Profile from "../Profile/Profile";
 import NotFound from "../NotFound/NotFound";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
-import Movies from "../Movies/Movies"; 
+import Movies from "../Movies/Movies";
 import SavedMovies from "../SavedMovies/SavedMovies";
 import * as auth from "../../utils/auth";
 import { api } from "../../utils/api.js";
@@ -27,7 +27,6 @@ function App() {
   //---------------- Все загруженные карточки фильмов -------------
   const [isDownloadedMovies, setDownloadedMovies] = React.useState([]); // внешний список фильмов
   const [isMainMovies, setMainMovies] = React.useState([]); // список фильмов на внутреннем сервере
-  const [isIdSavedMovies, setIdSavedMovies] = React.useState([]); // номера сохраненных фильмов
 
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
@@ -44,16 +43,16 @@ function App() {
           setCurrentUser(data);
         })
         .catch((err) => {
-           console.log('ошибка получения данных пользователя', err);
+          console.log("ошибка получения данных пользователя", err);
         });
 
       //--------------- Работа с фильмами ---------------
-      console.log("Запрос фильмов");
+      console.log("App-> Запрос фильмов");
       moviesApi // запрос всех фильмов с внешнего апи
         .getInitialCards()
         .then((data) => {
           setDownloadedMovies(data);
-          console.log("Данные с внешними фильмами пришли:", data); // выполняется до загрузки массива
+          console.log("App-> Данные с внешними фильмами пришли:"); // выполняется до загрузки массива
         })
         .catch((err) => {
           console.log("данные не пришли:", err);
@@ -62,9 +61,9 @@ function App() {
       mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
         .getInitialCards()
         .then((data) => {
-          console.log("фильмы на своем сервере:", data);
+          console.log("App-> фильмы с моего сервера пришли:");
           setMainMovies(data);
-          console.log("Данные пришли:", isMainMovies); // выполняется до загрузки массива
+          //  console.log("Данные пришли:", isMainMovies); // выполняется до загрузки массива
         })
         .catch((err) => {
           console.log("данные не пришли:", err);
@@ -185,7 +184,7 @@ function App() {
   }
   function onUpdateProfile({ email, name }) {
     setProfileSending(true);
-    console.log("Запрос patch на изменение профиля", email, name);
+    //  console.log("Запрос patch на изменение профиля", email, name);
     setProfileRec(""); // сбросить сообщение об ошибке
     api
       .setUserInfo({ name, email })
@@ -212,18 +211,27 @@ function App() {
     setRegistered(false);
   }
 
-//----------------- Обработка лайка фильма -------------
+  //------------------- концепция перерисовки фильмов  по двум основным массивам ------------- !!!!!!!
+  //----------------- пересортировка загруженных фильмов по сохраненным -------------
   useEffect(() => {
-    // Логика появления первоначальных лайков setIdSavedMovies
-    let arrayNumber = [];
-    isMainMovies.forEach((item) => { // перебираем фильмы с сервера
-      arrayNumber=[...arrayNumber, {movieId: item.movieId, _id: item._id}]
+    let resortedArray = isDownloadedMovies.slice(); // загруженные с сервера
+    resortedArray.forEach((item) => {
+      item.like = false; // если фильм убрали из сохраненных
+      isMainMovies.forEach((data) => {
+      //  console.log('App-> перебор фильмов. id=', item.id, ' movieId=', data.movieId);
+        if (data.movieId == item.id) {
+          // если в сохраненных есть такой moveId - добавим поля
+          item.like = true; // проставим флажок лайка-сохраненного
+          item._id = data._id; // и айди БД
+        }
+      });
     });
-    console.log('номера сохраненных фильмов:', arrayNumber);
-    setIdSavedMovies(arrayNumber);
-  }, [isMainMovies]);
+    console.log('App-> пересортировка по изменению сохраненных фильмов:');
+//    console.log('App-> сохраненные фильмы:', isMainMovies);
+    setDownloadedMovies(resortedArray); // новый массив. ожидаем рендер
+  }, [isMainMovies, isDownloadedMovies.length]);
 
-//------------------ Разметка ---------------
+  //------------------ Разметка ---------------
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div>
@@ -238,7 +246,8 @@ function App() {
               <Header email={email} />
               <Movies
                 isDownloadedMovies={isDownloadedMovies} // все загруженные фильмы с внешнего сервера
-                isIdSavedMovies={isIdSavedMovies} // массив сохраненных фильмов
+                isMainMovies={isMainMovies} // массив сохраненных фильмов
+                setMainMovies={setMainMovies}
               />
               <Footer />
             </Route>
@@ -248,6 +257,7 @@ function App() {
               <Header email={email} />
               <SavedMovies
                 isMainMovies={isMainMovies} // пока выдадим все сохраненные
+                setMainMovies={setMainMovies} // заменить на setMainMovies
               />
               <Footer />
             </Route>

@@ -23,7 +23,7 @@ function MoviesCardList({
 
   useEffect(() => {
     // дожидается отработки стэйта setFoundMovies
-    console.log("Выбранные фильмы:", isDisplayedMovies);
+    console.log("MoviesCardList-> выбранные фильмы:", isDisplayedMovies);
     setLoading(false); // выключить прелоадер
   }, [isDisplayedMovies]);
   const [isLoading, setLoading] = useState(false);
@@ -33,12 +33,13 @@ function MoviesCardList({
     // сюда воткнуть поисковый запрос в переменные функции
     setLoading(true); // включить прелоадер
     onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
+    console.log("MoviesCardList-> был сделан запрос к регулярке:", isSearchString);
   }
   const [isShortFilm, setShortFilm] = useState(false);
 
   function toggleSelector() {
     setShortFilm(!isShortFilm);
-    console.log("переключатель длительности");
+    console.log("MoviesCardList-> переключатель длительности");
   }
 
 //------------------------
@@ -66,7 +67,7 @@ function MoviesCardList({
 // }, [isDisplayedMovies, isFoundMovies, isMainMovies]);
 function onNextMovies() {
 
-  console.log('кнопка ЕЩЕ');
+  console.log('MoviesCardList-> кнопка ЕЩЕ');
   // запрос следующих фильмов по кнопке ЕЩЕ
 
   // const array = isDisplayedMovies.concat(

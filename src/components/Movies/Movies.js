@@ -8,40 +8,40 @@ import { getMoviesFromArray } from "../../utils/found"; // поисковик п
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { cardImageUrl } from "../../utils/constants";
 
-function Movies({ isDownloadedMovies, isIdSavedMovies }) {
-  const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском
+function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
+  const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском  с довесом like и _id
   function onGetMovies(searchString) {
     // по кнопке ПОИСК на вкладке ФИЛЬМЫ
     const arrFoundMovies = getMoviesFromArray(searchString, isDownloadedMovies);
-    arrFoundMovies.forEach((item) => {
-      isIdSavedMovies.forEach((data) => {
-        if (data.movieId == item.id) {
-          item.like = true; // проставим флажок лайка
-          item._id = data._id; // и айди БД
-        }
-      });
-      console.log(item);
-    });
-    setFoundMovies(arrFoundMovies); //
+    setFoundMovies(arrFoundMovies);
   }
 
   //-----------------------
   function onDeleteAndDislike({ card, setButtonLike }) {
-    console.log("Будем удалять фильм:", card);
-    mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
+    console.log("Movies-> будем удалять фильм:", card);
+    mainApi
       .deleteCard(card._id)
       .then((res) => {
-        console.log("удалили фильм:", res);
+        console.log("Movies-> удалили фильм:", res);
+        let newArray = isMainMovies.slice(); // параллельно серверу живущий массив сохраненных фильмов
+        const index = isMainMovies.findIndex(
+          (item) => item.movieId == res.movieId
+        );
+        if (index >= 0) {
+          newArray.splice(index, 1);
+          console.log("Movies-> удаляем в загруженном списке Main:", newArray);
+          setMainMovies(newArray);
+        }
         card.like = false; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
         setButtonLike(false);
       })
       .catch((err) => {
-        console.log("фильм не удалился:", err);
+        console.log("Movies-> фильм не удалился:", err);
       });
   }
 
   function onSaveAndLike({ card, setButtonLike }) {
-    console.log("ткнули кнопку лайка. По ней будем сохранять:", card);
+    console.log("Movies-> ткнули кнопку лайка. По ней будем сохранять:", card);
     let data = Object.assign({}, card);
     data.movieId = card.id;
     data.image = cardImageUrl + card.image.url;
@@ -51,19 +51,23 @@ function Movies({ isDownloadedMovies, isIdSavedMovies }) {
     mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
       .setNewCard(data)
       .then((res) => {
-        console.log("сохранили фильм:", res);
+        console.log("Movies-> сохранили фильм:", res);
         card.like = true; // добавим или изменим лайк во внутреннем массиве загруженных фильмов
         card._id = res._id; // присвоим идентификатор из БД
         setButtonLike(true);
+        let arr = isMainMovies.slice(); // синхронизируем сохраненный массив с сервером
+        arr.push(res);
+        console.log("Movies-> добавили сохраненный фильм:", arr);
+        setMainMovies(arr);
       })
       .catch((err) => {
-        console.log("фильм не сохранился:", err);
+        console.log("Movies-> фильм не сохранился:", err);
       });
   }
 
   function onLikeMovie({ card, setButtonLike }) {
     console.log(
-      "Обрабатываем клик по:",
+      "Movies-> Обрабатываем клик по:",
       card.id,
       "состояние лайка:",
       !!card.like
@@ -73,6 +77,24 @@ function Movies({ isDownloadedMovies, isIdSavedMovies }) {
       : onSaveAndLike({ card, setButtonLike });
   }
   //-------------------------
+
+  //----------------- Обработка дизлайка фильма из SavedMovies-------------
+  // useEffect(() => {
+  //   let newArray = isFoundMovies.slice();
+  //   const index = isFoundMovies.findIndex(
+  //     (item) => item.movieId === isDeleteId
+  //   );
+  //   if (index >= 0) {
+  //     newArray.splice(index, 1);
+  //     console.log(
+  //       "Movies-> удаляем в уже найденных Found:",
+  //       index,
+  //       "из:",
+  //       newArray
+  //     );
+  //     setFoundMovies(newArray);
+  //   }
+  // }, [isDeleteId]);
 
   return (
     <MoviesCardList

@@ -9,10 +9,10 @@ function MoviesCard({ isSavedMovies, card, сlickButton, }) {
   //  console.log('кнопка в карточке:', card);
     сlickButton({card, setButtonLike});
   }
-  useEffect(() => {
-    console.log('изменили лайк:', card.like);
-     !!card.like ? setButtonLike(true) : setButtonLike(false);
-  }, [!!card.like]);
+  // useEffect(() => {
+  //   console.log('MovieCard-> изменился лайк:', card.like);
+  //    !!card.like ? setButtonLike(true) : setButtonLike(false);
+  // }, [!!card.like]);
 
 
   return (
