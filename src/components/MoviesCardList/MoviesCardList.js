@@ -10,22 +10,30 @@ import { ADD_NARROW, ADD_WIDE, WIDTH_NARROW } from "../../utils/constants";
 function MoviesCardList({
   name,
   onGetMovies,
-  isDisplayedMovies,
+  isFoundMovies,
   сlickButton, // клик по кнопке лайка или крестика.
-  isSavedMovies
+  isSavedMovies,
 }) {
-
+  const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
+  const [isLengthMovies, setLengthMovies] = React.useState({
+    // отобразим в кнопке ЕЩЕ остаток поиска и количество на выдачу
+    add: ADD_WIDE,
+    left: 0,
+  }); // остаток найденных для кнопки ЕЩЕ
   const [isSearchString, setSearchString] = useState(""); // стэйт сроки поиска
   function handleChangeSearch(event) {
     //    event.preventDefault();
     setSearchString(event.target.value);
   }
+  const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования (не кнопка ЕЩЕ)
+  let additive = ADD_WIDE; // Величина добавки фильмов в ЕЩЕ
+  const windowInnerWidth = document.documentElement.clientWidth; // ширина окна для корректировки выдачи
 
   useEffect(() => {
     // дожидается отработки стэйта setFoundMovies
-    console.log("MoviesCardList-> выбранные фильмы:", isDisplayedMovies);
+    console.log("MoviesCardList-> выбранные фильмы:", isFoundMovies);
     setLoading(false); // выключить прелоадер
-  }, [isDisplayedMovies]);
+  }, [isFoundMovies]);
   const [isLoading, setLoading] = useState(false);
 
   function onFindMovies(event) {
@@ -33,7 +41,10 @@ function MoviesCardList({
     // сюда воткнуть поисковый запрос в переменные функции
     setLoading(true); // включить прелоадер
     onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
-    console.log("MoviesCardList-> был сделан запрос к регулярке:", isSearchString);
+    console.log(
+      "MoviesCardList-> был сделан запрос к регулярке:",
+      isSearchString
+    );
   }
   const [isShortFilm, setShortFilm] = useState(false);
 
@@ -42,54 +53,50 @@ function MoviesCardList({
     console.log("MoviesCardList-> переключатель длительности");
   }
 
-//------------------------
-// useEffect(() => {
-  // Логика появления кнопки ЕЩЕ
+  //------------------------
+  useEffect(() => {
+    //  Логика появления кнопки ЕЩЕ
+    showCardsMovies(); // Заполним первые карточки на выдачу
+    console.log(
+      "MovieCardList-> проверяем кнопку ЕЩЕ. isDisplayedMovies:",
+      isDisplayedMovies
+    );
+    console.log("MovieCardList-> Найденные фильмы:", isFoundMovies);
+    if (
+      isDisplayedMovies.length < isFoundMovies.length && // если отображаемых меньше найденных
+      !!isDisplayedMovies &&
+      !!isFoundMovies[0]
+    ) {
+      setNoMoreMovies(false); // вешаем кнопку ЕЩЕ
+    } else setNoMoreMovies(true);
+  }, [isFoundMovies]);
 
-//   if (windowInnerWidth < WIDTH_NARROW) {
-//     additive = ADD_NARROW;
-//   } else {
-//     additive = ADD_WIDE;
-//   }
+  function onNextMovies() {
+    // запрос следующих фильмов по кнопке ЕЩЕ
+    console.log("MoviesCardList-> кнопка ЕЩЕ");
+    showCardsMovies(); // выдача по клику ЕЩЕ
+  }
 
-//   console.log("проверяем кнопку ЕЩЕ:", !!isFoundMovies[0]);
-//   if (
-//     isDisplayedMovies.length < isFoundMovies.length && // если отображаемых меньше найденных
-//     !!isDisplayedMovies[0] &&
-//     !!isFoundMovies[0]
-//   ) {
-//     setNoMoreMovies(false); // вешаем кнопку ЕЩЕ
-//   } else setNoMoreMovies(true);
-//   setLengthMovies({
-//     add: additive,
-//     left: isFoundMovies.length - isDisplayedMovies.length,
-//   });
-// }, [isDisplayedMovies, isFoundMovies, isMainMovies]);
-function onNextMovies() {
+  function showCardsMovies() {
+    if (windowInnerWidth < WIDTH_NARROW) { // проверим размер экрана
+      additive = ADD_NARROW;
+    } else {
+      additive = ADD_WIDE;
+    }
+    setLengthMovies({ // определим остаток и количество на выдачу
+      add: additive,
+      left: isFoundMovies.length - isDisplayedMovies.length,
+    });
+    const array = isDisplayedMovies.concat(
+      isFoundMovies.slice(
+        isDisplayedMovies.length,
+        isDisplayedMovies.length + isLengthMovies.add
+      )
+    );
 
-  console.log('MoviesCardList-> кнопка ЕЩЕ');
-  // запрос следующих фильмов по кнопке ЕЩЕ
-
-  // const array = isDisplayedMovies.concat(
-  //   isFoundMovies.slice(
-  //     isDisplayedMovies.length,
-  //     isDisplayedMovies.length + additive
-  //   )
-  // );
-
-  // console.log("добавим еще фильмы в отображаемый список:", array);
-  // setDisplayedMovies(array);
-}
-
-
-// const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // отображаемые
-const [isLengthMovies, setLengthMovies] = React.useState({
-  add: ADD_WIDE,
-  left: 0,
-}); // остаток найденных
-const [isNoMoreMovies, setNoMoreMovies] = React.useState(true); // включить режим редактирования
-// let additive = ADD_WIDE; // Величина добавки фильмов в ЕЩЕ
-// const windowInnerWidth = document.documentElement.clientWidth; // ширина окна для корректировки выдачи
+    console.log("добавим еще фильмы в отображаемый список:", array);
+    setDisplayedMovies(array);
+  }
 
   return (
     <div className="body movies">

@@ -54,7 +54,7 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
     <MoviesCardList
       name="saved-movies"
       onGetMovies={onGetSavedMovies}
-      isDisplayedMovies={isFoundSavedMovies}
+      isFoundMovies={isFoundSavedMovies}
       сlickButton={onDeleteAndDislike}
       isSavedMovies={true}
     />

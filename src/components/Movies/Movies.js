@@ -100,7 +100,7 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
     <MoviesCardList
       name="movies"
       onGetMovies={onGetMovies}
-      isDisplayedMovies={isFoundMovies} // будем отдавать сразу все фильмы, кнопку ЕЩЕ перенесем в cardlist
+      isFoundMovies={isFoundMovies} // будем отдавать сразу все фильмы, кнопку ЕЩЕ перенесем в cardlist
       сlickButton={onLikeMovie}
       isSavedMovies={false}
     />
