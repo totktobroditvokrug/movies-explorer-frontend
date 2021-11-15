@@ -7,12 +7,19 @@ import { mainApi } from "../../utils/MainApi"; // апи для пользова
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 
 function SavedMovies({ isMainMovies, setMainMovies }) {
-  const [isFoundSavedMovies, setFoundSavedMovies] = React.useState([]); // найденные поиском
-  function onGetSavedMovies(searchString) {
-    // по кнопке ПОИСК на вкладке ФИЛЬМЫ
+  const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
+//  const [isFoundSavedMovies, setFoundSavedMovies] = React.useState([]); // найденные поиском
+  //---------------------------
+  const [isLoading, setLoading] = useState(false); // для прелоадера
+  function onGetSavedMovies(searchString) {    // по кнопке ПОИСК на вкладке ФИЛЬМЫ
+    setLoading(true); // включить прелоадер
     const arrFoundMovies = getMoviesFromArray(searchString, isMainMovies);
-    setFoundSavedMovies(arrFoundMovies); //
+    setDisplayedMovies(arrFoundMovies); //
   }
+  useEffect(() => {
+    console.log("SavedMovies-> Найденные фильмы:", isDisplayedMovies);
+    setLoading(false); // выключить прелоадер
+  }, [isDisplayedMovies]);
 
   function onDeleteAndDislike({ card }) {
     console.log("SavedMovies-> будем удалять фильм:", card);
@@ -36,13 +43,23 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
           res.movieId
         );
 
-        const indexFound = isFoundSavedMovies.findIndex(
+        // const indexFound = isFoundSavedMovies.findIndex(
+        //   (item) => item.movieId === res.movieId
+        // ); // удаляемый индекс
+        // if (indexFound >= 0) {
+        //   let newArrayFound = isFoundSavedMovies.slice();
+        //   newArrayFound.splice(indexFound, 1);
+        //   console.log('SavedMovies-> удаляем из массива найденных фильм:', newArrayFound); 
+        //   setFoundSavedMovies(newArrayFound); // удалит из поиска
+        // }
+        const indexDisplayed = isDisplayedMovies.findIndex(
           (item) => item.movieId === res.movieId
         ); // удаляемый индекс
-        if (indexFound >= 0) {
-          let newArrayFound = isFoundSavedMovies.slice();
-          newArrayFound.splice(indexFound, 1);
-          setFoundSavedMovies(newArrayFound); // удалит из поиска
+        if (indexDisplayed >= 0) {
+          let newArrayDisplayed = isDisplayedMovies.slice();
+          newArrayDisplayed.splice(indexDisplayed, 1);
+          console.log('SavedMovies-> удаляем из массива отображаемых фильмов:', newArrayDisplayed); 
+          setDisplayedMovies(newArrayDisplayed); // удалит из выдачи
         }
       })
       .catch((err) => {
@@ -54,9 +71,10 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
     <MoviesCardList
       name="saved-movies"
       onGetMovies={onGetSavedMovies}
-      isFoundMovies={isFoundSavedMovies}
       сlickButton={onDeleteAndDislike}
       isSavedMovies={true}
+      isDisplayedMovies={isDisplayedMovies}
+      isLoading={isLoading}
     />
   );
 }

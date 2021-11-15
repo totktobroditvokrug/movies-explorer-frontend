@@ -63,6 +63,10 @@
   text-align: left;
   margin-left: 14px;
 }
+.movies__text_empty{
+  color: #EE3465;
+  padding-top: 10px;
+}
 .movies__button-select {
   height: 20px;
   width: 36px;
