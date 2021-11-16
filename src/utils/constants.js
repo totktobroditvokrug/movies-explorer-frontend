@@ -13,6 +13,9 @@ export const ADD_NARROW = 3; // добавляем при узком экран�
 export const ADD_WIDE  = 5;  // добавляем при широком экране
 export const WIDTH_NARROW = 700;  // ширина переключения в px
 
+//--- Константа длительности короткометражки ---
+export const SHORT_FILM_DURATION = 40;
+
 export const initialCards = [
     {
         country: 'страна',

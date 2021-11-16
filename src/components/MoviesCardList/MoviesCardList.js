@@ -13,6 +13,8 @@ function MoviesCardList({
   isSavedMovies,
   isDisplayedMovies,
   isLoading,
+  isShortFilm,
+  setShortFilm,
   children,
 }) {
   const [isSearchString, setSearchString] = useState(""); // стэйт сроки поиска
@@ -20,6 +22,7 @@ function MoviesCardList({
 
   function handleChangeSearch(event) {
     //    event.preventDefault();
+    setflagEmptyReq(false);
     setSearchString(event.target.value);
   }
 
@@ -34,7 +37,6 @@ function MoviesCardList({
     onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
   }
 
-  const [isShortFilm, setShortFilm] = useState(false);
   function toggleSelector() {
     setShortFilm(!isShortFilm);
     console.log("MoviesCardList-> переключатель длительности");
@@ -59,7 +61,7 @@ function MoviesCardList({
       </form>
       {isflagEmptyReq && (
         <span className="movies__text movies__text_empty">
-          пустой запрос, но выдадим всё
+          пустой запрос, выданы все фильмы
         </span>
       )}
 
@@ -82,6 +84,7 @@ function MoviesCardList({
               isSavedMovies={isSavedMovies}
               card={card}
               сlickButton={сlickButton}
+              isShortFilm={isShortFilm}
             />
           ))}
       </ul>

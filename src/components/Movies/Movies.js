@@ -6,19 +6,38 @@ import { useEffect } from "react/cjs/react.development";
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { cardImageUrl } from "../../utils/constants";
-import { ADD_NARROW, ADD_WIDE, WIDTH_NARROW } from "../../utils/constants";
+import {
+  ADD_NARROW,
+  ADD_WIDE,
+  WIDTH_NARROW,
+  SHORT_FILM_DURATION,
+} from "../../utils/constants";
 
 function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
   const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
   const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском  с довесом like и _id
+  const [isAllFoundMovies, setAllFoundMovies] = React.useState([]); // найденные поиском  с довесом like и _id
+  const [isShortFoundMovies, setShortFoundMovies] = React.useState([]); // найденные поиском  с довесом like и _id
+  const [isShortFilm, setShortFilm] = useState(false);
   function onGetMovies(searchString) {
     console.log("Movies-> поисковая строка:", searchString);
     setLoading(true); // включить прелоадер
     // по кнопке ПОИСК на вкладке ФИЛЬМЫ
     const arrFoundMovies = getMoviesFromArray(searchString, isDownloadedMovies);
-    setFoundMovies(arrFoundMovies);
+    setAllFoundMovies(arrFoundMovies); // ищем все фильмы несмотря на длительность
+    console.log("Movies-> флаг коротких фильмов:", isShortFilm);
+    let arrShortMovies = [];
+    arrFoundMovies.forEach((item) => {
+      console.log("Movies-> длительность:", item.duration);
+      if (item.duration < SHORT_FILM_DURATION) arrShortMovies.push(item);
+    });
+    console.log("Movies-> короткометражки:", arrShortMovies);
+    setShortFoundMovies(arrShortMovies); // массив короткометражек
+
+    isShortFilm
+      ? setFoundMovies(arrShortMovies)
+      : setFoundMovies(arrFoundMovies);
   }
-  //---------------------------
   const [isLoading, setLoading] = useState(false); // для прелоадера
   const [isLengthMovies, setLengthMovies] = React.useState({
     // отобразим в кнопке ЕЩЕ остаток поиска и количество на выдачу
@@ -30,6 +49,12 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
   const windowInnerWidth = document.documentElement.clientWidth; // ширина окна для корректировки выдачи
 
   //------------------------
+  useEffect(() => {
+    isShortFilm
+      ? setFoundMovies(isShortFoundMovies)
+      : setFoundMovies(isAllFoundMovies);
+  }, [isShortFilm]);
+
   useEffect(() => {
     //  Логика появления кнопки ЕЩЕ и выключение прелоадера по изменению найденных фильмов
     setDisplayedMovies([]); // обнуляем выданные фильмы
@@ -145,6 +170,7 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
       ? onDeleteAndDislike({ card, setButtonLike }) // если был лайк- пробуем удалить из избранного
       : onSaveAndLike({ card, setButtonLike });
   }
+
   //-------------------------
 
   return (
@@ -155,6 +181,8 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
       isSavedMovies={false}
       isDisplayedMovies={isDisplayedMovies}
       isLoading={isLoading}
+      isShortFilm={isShortFilm}
+      setShortFilm={setShortFilm}
     >
       {!isNoMoreMovies && (
         <button className="movies__next" type="button" onClick={onNextMovies}>

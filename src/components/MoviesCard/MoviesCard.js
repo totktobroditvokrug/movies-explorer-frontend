@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../MoviesCard/MoviesCard.css";
-import { cardImageUrl } from "../../utils/constants";
+import { cardImageUrl, } from "../../utils/constants";
 
 function MoviesCard({ isSavedMovies, card, сlickButton }) {
   const [isButtonLike, setButtonLike] = useState(!!card.like);

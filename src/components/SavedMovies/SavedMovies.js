@@ -7,12 +7,13 @@ import { mainApi } from "../../utils/MainApi"; // апи для пользова
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 
 function SavedMovies({ isMainMovies, setMainMovies }) {
+  const [isShortFilm, setShortFilm] = useState(false);
   const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
-  //---------------------------
   const [isLoading, setLoading] = useState(false); // для прелоадера
   function onGetSavedMovies(searchString) {    // по кнопке ПОИСК на вкладке ФИЛЬМЫ
     setLoading(true); // включить прелоадер
     const arrFoundMovies = getMoviesFromArray(searchString, isMainMovies);
+
     setDisplayedMovies(arrFoundMovies); //
   }
   useEffect(() => {
@@ -64,6 +65,8 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
       isSavedMovies={true}
       isDisplayedMovies={isDisplayedMovies}
       isLoading={isLoading}
+      isShortFilm={isShortFilm}
+      setShortFilm={setShortFilm}
     />
   );
 }
