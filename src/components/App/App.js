@@ -16,9 +16,6 @@ import { moviesApi } from "../../utils/MoviesApi"; // внешний апи с �
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { chekErrorType } from "../../utils/err_const";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
-import { ADD_NARROW, ADD_WIDE, WIDTH_NARROW } from "../../utils/constants";
-import { cardImageUrl } from "../../utils/constants";
-
 import "./App.css";
 
 function App() {

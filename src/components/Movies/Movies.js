@@ -5,7 +5,7 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import { useEffect } from "react/cjs/react.development";
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
-import { cardImageUrl } from "../../utils/constants";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import {
   ADD_NARROW,
   ADD_WIDE,
@@ -14,6 +14,7 @@ import {
 } from "../../utils/constants";
 
 function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
+  const currentUser = React.useContext(CurrentUserContext);
   const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
   const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском  с довесом like и _id
   const [isAllFoundMovies, setAllFoundMovies] = React.useState([]); // найденные поиском  с довесом like и _id
@@ -135,9 +136,9 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
   }
 
   function onSaveAndLike({ card, setButtonLike }) {
-    console.log("Movies-> ткнули кнопку лайка. По ней будем сохранять:", card);
+    console.log("Movies-> ткнули кнопку лайка. По ней будем сохранять:", currentUser);
     let data = Object.assign({}, card);
-    // data.movieId = card.id;
+    data.owner = currentUser.data._id;
     data.image = card.image.url;
     // data.trailer = card.trailerLink;
     // data.thumbnail = card.image.formats.thumbnail.url;

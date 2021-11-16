@@ -19,7 +19,6 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
     // по кнопке ПОИСК на вкладке ФИЛЬМЫ
     setLoading(true); // включить прелоадер
     const arrFoundMovies = getMoviesFromArray(searchString, isMainMovies);
-    //---------
     setAllFoundMovies(arrFoundMovies); // ищем все фильмы несмотря на длительность
     console.log("SavedMovies-> флаг коротких фильмов:", isShortFilm);
     let arrShortMovies = [];
@@ -33,10 +32,8 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
     isShortFilm
       ? setDisplayedMovies(arrShortMovies)
       : setDisplayedMovies(arrFoundMovies);
-
-    //----------
-    //setDisplayedMovies(arrFoundMovies); //
   }
+
   useEffect(() => {
     console.log("SavedMovies-> Найденные фильмы:", isDisplayedMovies);
     setLoading(false); // выключить прелоадер
