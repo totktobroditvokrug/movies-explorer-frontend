@@ -5,21 +5,48 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import { useEffect } from "react/cjs/react.development";
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
+import {
+  SHORT_FILM_DURATION,
+} from "../../utils/constants";
 
 function SavedMovies({ isMainMovies, setMainMovies }) {
   const [isShortFilm, setShortFilm] = useState(false);
   const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
+  const [isAllFoundMovies, setAllFoundMovies] = React.useState([]);
+  const [isShortFoundMovies, setShortFoundMovies] = React.useState([]);
   const [isLoading, setLoading] = useState(false); // для прелоадера
-  function onGetSavedMovies(searchString) {    // по кнопке ПОИСК на вкладке ФИЛЬМЫ
+  function onGetSavedMovies(searchString) {
+    // по кнопке ПОИСК на вкладке ФИЛЬМЫ
     setLoading(true); // включить прелоадер
     const arrFoundMovies = getMoviesFromArray(searchString, isMainMovies);
+    //---------
+    setAllFoundMovies(arrFoundMovies); // ищем все фильмы несмотря на длительность
+    console.log("SavedMovies-> флаг коротких фильмов:", isShortFilm);
+    let arrShortMovies = [];
+    arrFoundMovies.forEach((item) => {
+      console.log("SavedMovies-> длительность:", item.duration);
+      if (item.duration < SHORT_FILM_DURATION) arrShortMovies.push(item);
+    });
+    console.log("SavedMovies-> короткометражки:", arrShortMovies);
+    setShortFoundMovies(arrShortMovies); // массив короткометражек
 
-    setDisplayedMovies(arrFoundMovies); //
+    isShortFilm
+      ? setDisplayedMovies(arrShortMovies)
+      : setDisplayedMovies(arrFoundMovies);
+
+    //----------
+    //setDisplayedMovies(arrFoundMovies); //
   }
   useEffect(() => {
     console.log("SavedMovies-> Найденные фильмы:", isDisplayedMovies);
     setLoading(false); // выключить прелоадер
   }, [isDisplayedMovies]);
+
+  useEffect(() => {
+    isShortFilm
+      ? setDisplayedMovies(isShortFoundMovies)
+      : setDisplayedMovies(isAllFoundMovies);
+  }, [isShortFilm]);
 
   function onDeleteAndDislike({ card }) {
     console.log("SavedMovies-> будем удалять фильм:", card);
@@ -38,17 +65,17 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
           );
           setMainMovies(newArrayMain); // это дополнительно пересортирует основной массив и отменит лайки
         }
-        console.log(
-          "SavedMovies-> удалили фильм movieId=",
-          res.movieId
-        );
+        console.log("SavedMovies-> удалили фильм movieId=", res.movieId);
         const indexDisplayed = isDisplayedMovies.findIndex(
           (item) => item.movieId === res.movieId
         ); // удаляемый индекс
         if (indexDisplayed >= 0) {
           let newArrayDisplayed = isDisplayedMovies.slice();
           newArrayDisplayed.splice(indexDisplayed, 1);
-          console.log('SavedMovies-> удаляем из массива отображаемых фильмов:', newArrayDisplayed); 
+          console.log(
+            "SavedMovies-> удаляем из массива отображаемых фильмов:",
+            newArrayDisplayed
+          );
           setDisplayedMovies(newArrayDisplayed); // удалит из выдачи
         }
       })
