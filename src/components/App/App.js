@@ -217,7 +217,12 @@ function App() {
     let resortedArray = isDownloadedMovies.slice(); // загруженные с сервера
     resortedArray.forEach((item) => {
       item.like = false; // если фильм убрали из сохраненных
+      item.movieId = item.id;
+      item.thumbnail = item.image.formats.thumbnail.url;
+      // if (!!item.image.url) item.image = item.image.url;
+      item.trailer = item.trailerLink;
       isMainMovies.forEach((data) => {
+      //  data.id = data.moveId;
       //  console.log('App-> перебор фильмов. id=', item.id, ' movieId=', data.movieId);
         if (data.movieId == item.id) {
           // если в сохраненных есть такой moveId - добавим поля

@@ -112,12 +112,12 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
   function onSaveAndLike({ card, setButtonLike }) {
     console.log("Movies-> ткнули кнопку лайка. По ней будем сохранять:", card);
     let data = Object.assign({}, card);
-    data.movieId = card.id;
-    data.image = cardImageUrl + card.image.url;
-    data.trailer = card.trailerLink;
-    data.thumbnail = cardImageUrl + card.image.formats.thumbnail.url;
+    // data.movieId = card.id;
+    data.image = card.image.url;
+    // data.trailer = card.trailerLink;
+    // data.thumbnail = card.image.formats.thumbnail.url;
     console.log(data);
-    mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
+    mainApi // сохраним по лайку
       .setNewCard(data)
       .then((res) => {
         console.log("Movies-> сохранили фильм:", res);

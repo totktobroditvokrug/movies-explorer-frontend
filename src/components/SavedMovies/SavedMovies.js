@@ -8,7 +8,6 @@ import { getMoviesFromArray } from "../../utils/found"; // поисковик п
 
 function SavedMovies({ isMainMovies, setMainMovies }) {
   const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
-//  const [isFoundSavedMovies, setFoundSavedMovies] = React.useState([]); // найденные поиском
   //---------------------------
   const [isLoading, setLoading] = useState(false); // для прелоадера
   function onGetSavedMovies(searchString) {    // по кнопке ПОИСК на вкладке ФИЛЬМЫ
@@ -42,16 +41,6 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
           "SavedMovies-> удалили фильм movieId=",
           res.movieId
         );
-
-        // const indexFound = isFoundSavedMovies.findIndex(
-        //   (item) => item.movieId === res.movieId
-        // ); // удаляемый индекс
-        // if (indexFound >= 0) {
-        //   let newArrayFound = isFoundSavedMovies.slice();
-        //   newArrayFound.splice(indexFound, 1);
-        //   console.log('SavedMovies-> удаляем из массива найденных фильм:', newArrayFound); 
-        //   setFoundSavedMovies(newArrayFound); // удалит из поиска
-        // }
         const indexDisplayed = isDisplayedMovies.findIndex(
           (item) => item.movieId === res.movieId
         ); // удаляемый индекс

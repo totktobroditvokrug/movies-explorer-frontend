@@ -68,8 +68,12 @@
     background-repeat: no-repeat;
     background-size: cover;
     padding: 6px;
+    transition: linear 0.3s;
 }
-
+.card__poster:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
 @media screen and (max-width: 770px) {
 
 }

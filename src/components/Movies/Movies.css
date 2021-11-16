@@ -1,103 +1,3 @@
-.movies {
-  background: #fafafa;
-  padding-top: 70px;
-}
-
-.movies__list {
-  box-sizing: border-box;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-.movies__find{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border: 1.5px solid rgba(170, 170, 170, 0.2);
-    border-radius: 8px;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-.movies__button-find {
-  font-family: "Inter", "Arial", sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 52px;
-  color: #ffffff;
-  background-color: #3456f3;
-  height: 52px;
-  width: 100px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  text-align: center;
-  margin: 10px;
-  padding: 0;
-  border: 0;
-  text-decoration: none;
-  cursor: pointer;
-}
-.movies__button-find:hover {
-  opacity: 0.8;
-}
-
-.movies__select{
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  margin-top: 26px;
-  padding-bottom: 44px;
-  border-bottom: 1px solid rgba(170, 170, 170, 0.2);
-  padding-bottom: 40px;
-}
-.movies__text{
-  font-family: Inter;  font-family: "Inter", "Arial", sans-serif;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  text-align: left;
-  margin-left: 14px;
-}
-.movies__button-select {
-  height: 20px;
-  width: 36px;
-  box-sizing: border-box;
-  background: transparent url('../../images/button_select_on.svg') center no-repeat;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  cursor: pointer;
-}
-.movies__button-select:hover {
-  opacity: 0.8;
-}
-.movies__button-select_off {
-  background: transparent url('../../images/button_select_off.svg') center no-repeat;
-}
-.movies__input{
-    font-family: 'Inter', 'Arial', sans-serif;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    text-align: left;
-    text-decoration: none;
-    border: none;
-    outline:none;
-    background-color: transparent;
-    color: #A0A0A0;
-    height: 46px;
-    margin-left: 12px;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-}
 .movies__next{
   font-family: 'Inter', 'Arial', sans-serif;
   font-size: 12px;
@@ -119,19 +19,8 @@
   opacity: 0.8;
 }
 
-@media screen and (max-width: 770px) {
-    .movies__input{
-        font-size: 16px;
-    }
-}
-
 @media screen and (max-width: 400px) {
-  .movies__button-find {
-    line-height: 44px;
-    height: 44px;
-    width: 80px;
-    margin: 6px;
-  }
+
   .movies__next{
     margin-bottom: 80px;
     transition: 0.3s;
