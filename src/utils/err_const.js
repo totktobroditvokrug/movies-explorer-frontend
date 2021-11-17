@@ -10,7 +10,7 @@ const ERROR_ACCES = 403;
 // const MONGO_DUPLICATE_EMAIL = 11000; //  такой емэйл уже существует
 
 export function chekErrorType(errStatus){
-  let errMessage = 'Ошибка не идентифицируется';
+  let errMessage = 'Сервер не отвечает. Попробуйте еще раз.';
   switch(errStatus){
     case STATUS_OK: errMessage = 'Успешный ответ'; break;
     case ERROR_CODE: errMessage = 'Переданы некорректные данные'; break;
@@ -20,6 +20,7 @@ export function chekErrorType(errStatus){
     case ERROR_AUTH: errMessage = 'Проблемы с токеном'; break;
     case ERROR_ACCES: errMessage = 'Доступ к ресурсу запрещен'; break;
     case ERROR_DEF: errMessage = 'Сервер упал'; break; 
+    default: errMessage = 'Сервер не отвечает. Попробуйте еще раз.';
   }
   return errMessage;
 }

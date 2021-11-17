@@ -22,7 +22,7 @@ function MoviesCard({ isSavedMovies, card, сlickButton }) {
           onClick={handleClick}
         ></button>
       </div>
-      <a href={card.trailer} target="_blank">
+      <a href={card.trailer} target="_blank" rel="noreferrer">
         <img
           src={cardImageUrl + card.thumbnail}
           alt={card.nameEN}

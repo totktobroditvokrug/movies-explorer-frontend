@@ -35,7 +35,7 @@ function Profile({
   }, []);
 
   function handleSubmit(e) {
- //   console.log('сабмит профиля', values);
+ //   // console.log('сабмит профиля', values);
     e.preventDefault();
     onUpdateProfile(values);
   }

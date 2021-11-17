@@ -8,7 +8,7 @@ class MoviesApi {
 
   _checkResponse(res) {
     // обработчик ошибок
-    console.log('server:', res);
+    // console.log('server:', res);
     if (res.ok) {
       return res.json();
     }
@@ -18,7 +18,7 @@ class MoviesApi {
   getInitialCards() {
     // получить массив карточек с сервера
 //    this._headers.Authorization = `Bearer ${localStorage.getItem("jwt")}`;
-    console.log('запрос апи с фильмами');
+    // console.log('запрос апи с фильмами');
     return fetch(`${this._url}`, {
       method: "GET",
       headers: this._headers,

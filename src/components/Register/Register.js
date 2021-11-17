@@ -43,6 +43,7 @@ function Register({
           onChange={handleChange}
           minLength="2"
           maxLength="30"
+          autoComplete="off"
           required
         />
         <span className="form__error" id="user-name-error">
@@ -56,6 +57,7 @@ function Register({
           id="user-email"
           placeholder="Введите E-mail"
           onChange={handleChange}
+          autoComplete="off"
           required
         />
         <span className="form__error" id="user-email-error">
@@ -72,6 +74,7 @@ function Register({
           onChange={handleChange}
           minLength="8"
           maxLength="40"
+          autoComplete="off"
           required
         />
         <span className="form__error" id="user-password-error">
