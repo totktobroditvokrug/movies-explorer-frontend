@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Movies/Movies.css";
 import "../Form/Form.css";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import { useEffect } from "react/cjs/react.development";
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
@@ -49,11 +48,15 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
   let additive = ADD_WIDE; // Величина добавки фильмов в ЕЩЕ
   const windowInnerWidth = document.documentElement.clientWidth; // ширина окна для корректировки выдачи
 
-  //------------------------
   useEffect(() => {
+    if(!!isShortFoundMovies 
+      && !!isAllFoundMovies)
+      {
     isShortFilm
       ? setFoundMovies(isShortFoundMovies)
-      : setFoundMovies(isAllFoundMovies);
+      : setFoundMovies(isAllFoundMovies);        
+      }
+
   }, [isShortFilm]);
 
   useEffect(() => {
@@ -120,7 +123,7 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies }) {
         console.log("Movies-> удалили фильм:", res);
         let newArray = isMainMovies.slice(); // параллельно серверу живущий массив сохраненных фильмов
         const index = isMainMovies.findIndex(
-          (item) => item.movieId == res.movieId
+          (item) => item.movieId === res.movieId
         );
         if (index >= 0) {
           newArray.splice(index, 1);

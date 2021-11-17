@@ -3,8 +3,7 @@ import "../MoviesCardList/MoviesCardList.css";
 import "../Form/Form.css";
 import Preloader from "../Preloader/Preloader";
 import MoviesCard from "../MoviesCard/MoviesCard";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react/cjs/react.development";
+
 
 function MoviesCardList({
   name,

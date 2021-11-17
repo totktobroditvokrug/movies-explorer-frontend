@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import "../SavedMovies/SavedMovies.css";
 import "../Form/Form.css";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import { useEffect } from "react/cjs/react.development";
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
-import {
-  SHORT_FILM_DURATION,
-} from "../../utils/constants";
+import { SHORT_FILM_DURATION } from "../../utils/constants";
 
 function SavedMovies({ isMainMovies, setMainMovies }) {
   const [isShortFilm, setShortFilm] = useState(false);
@@ -40,9 +37,11 @@ function SavedMovies({ isMainMovies, setMainMovies }) {
   }, [isDisplayedMovies]);
 
   useEffect(() => {
-    isShortFilm
-      ? setDisplayedMovies(isShortFoundMovies)
-      : setDisplayedMovies(isAllFoundMovies);
+    if (!!isShortFoundMovies && !!isAllFoundMovies) {
+      isShortFilm
+        ? setDisplayedMovies(isShortFoundMovies)
+        : setDisplayedMovies(isAllFoundMovies);
+    }
   }, [isShortFilm]);
 
   function onDeleteAndDislike({ card }) {
