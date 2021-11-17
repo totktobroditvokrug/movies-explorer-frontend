@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../SavedMovies/SavedMovies.css";
 import "../Form/Form.css";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import { useEffect } from "react/cjs/react.development";
 import { mainApi } from "../../utils/MainApi"; // апи для пользователя
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 import {

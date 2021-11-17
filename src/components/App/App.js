@@ -226,7 +226,7 @@ function App() {
       isMainMovies.forEach((data) => {
       //  data.id = data.moveId;
       //  // console.log('App-> перебор фильмов. id=', item.id, ' movieId=', data.movieId);
-        if (data.movieId == item.id) {
+        if (data.movieId === item.id) {
           // если в сохраненных есть такой moveId - добавим поля
           item.like = true; // проставим флажок лайка-сохраненного
           item._id = data._id; // и айди БД

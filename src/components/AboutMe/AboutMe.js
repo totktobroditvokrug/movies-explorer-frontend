@@ -8,11 +8,13 @@ function AboutMe() {
       <h1 className="main__title">Студент</h1>
       <div className="me__container">
         <div className="me__about">
+          <a name="profile"></a>
           <h2 className="me__name">Сергей</h2>
           <p className="me__job">Инженер-электронщик, 46 лет</p>
           <p className="me__blablabla">
             Учился в МЭИ на кафедре "Промышленная электроника". С 1997 года
-            работаю по специальности.
+            работаю по специальности. Основная сфера деятельности- силовая
+            электроника и электропривод.
           </p>
           <ul className="me__links">
             <li>

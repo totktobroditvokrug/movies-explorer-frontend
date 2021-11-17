@@ -2,7 +2,7 @@ import React from "react";
 import "./NavTab.css";
 
 function NavTab({ value }) {
-  return <button className="navtab_button">{value}</button>;
+  return <a href="#profile" className="navtab_button">{value}</a>;
 }
 
 export default NavTab;
