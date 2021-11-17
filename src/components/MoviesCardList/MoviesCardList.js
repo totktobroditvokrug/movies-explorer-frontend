@@ -3,8 +3,6 @@ import "../MoviesCardList/MoviesCardList.css";
 import "../Form/Form.css";
 import Preloader from "../Preloader/Preloader";
 import MoviesCard from "../MoviesCard/MoviesCard";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react/cjs/react.development";
 
 function MoviesCardList({
   name,
@@ -15,6 +13,7 @@ function MoviesCardList({
   isLoading,
   isShortFilm,
   setShortFilm,
+  isErrMovies,
   children,
 }) {
   const [isSearchString, setSearchString] = useState(""); // стэйт сроки поиска
@@ -29,17 +28,18 @@ function MoviesCardList({
   function onFindMovies(event) {
     event.preventDefault();
 
-    isSearchString === "" ? setflagEmptyReq (true) : setflagEmptyReq (false);
-    console.log(
-      "MoviesCardList-> был сделан запрос к регулярке:",
-      isSearchString, isflagEmptyReq
-    );
+    isSearchString === "" ? setflagEmptyReq(true) : setflagEmptyReq(false);
+    // console.log(
+    //   "MoviesCardList-> был сделан запрос к регулярке:",
+    //   isSearchString,
+    //   isflagEmptyReq
+    // );
     onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
   }
 
   function toggleSelector() {
     setShortFilm(!isShortFilm);
-    console.log("MoviesCardList-> переключатель длительности");
+    // console.log("MoviesCardList-> переключатель длительности");
   }
 
   return (
@@ -52,18 +52,23 @@ function MoviesCardList({
           onChange={handleChangeSearch}
         />
         <button
-          className="movies__button-find"
+          className={`movies__button-find ${
+            !!isErrMovies && "movies__button-find_disabled"
+          }`}
           type="submit"
           onClick={onFindMovies}
+          disabled={!!isErrMovies}
         >
           Поиск
         </button>
       </form>
       {isflagEmptyReq && (
         <span className="movies__text movies__text_empty">
-          пустой запрос, выданы все фильмы
+          Пустой запрос. Выданы все фильмы!
         </span>
       )}
+
+      <span className="movies__text movies__text_empty">{isErrMovies}</span>
 
       <div className="movies__select">
         <button

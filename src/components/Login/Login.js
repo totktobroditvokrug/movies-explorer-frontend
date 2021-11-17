@@ -40,6 +40,7 @@ useEffect(() => {
           id="user-email"
           placeholder="Введите E-mail"
           onChange={handleChange}
+          autocomplete="off"
           required
         />
         <span className="form__error" id="user-email-error">
@@ -55,6 +56,7 @@ useEffect(() => {
           onChange={handleChange}
           minLength="8"
           maxLength="40"
+          autocomplete="off"
           required
         />
         <span className="form__error" id="user-password-error">

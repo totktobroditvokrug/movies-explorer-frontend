@@ -43,6 +43,10 @@
 .movies__button-find:hover {
   opacity: 0.8;
 }
+.movies__button-find_disabled{
+  background-color: #F8F8F8;
+  color: #C2C2C2;
+}
 
 .movies__select{
   width: 100%;

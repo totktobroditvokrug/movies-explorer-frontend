@@ -14,7 +14,7 @@ function Header({ email, loggedIn }) {
   }
 
   const isMain = useRouteMatch({ path: "/", exact: true });
-  console.log("Статус пользователя:", loggedIn);
+  // console.log("Статус пользователя:", loggedIn);
   return (
     <div>
       <div className={`${isMenuOpen ? "header__overlay" : ""}`}></div>

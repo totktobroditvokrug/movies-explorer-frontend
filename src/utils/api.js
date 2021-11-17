@@ -16,7 +16,7 @@ class Api {
 
     getInitialCards() {  // получить массив карточек с сервера
       this._headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
-  //    // console.log(textError);
+  //    // // console.log(textError);
       return fetch(`${this._url}/${cardUrl}`, {
         method: "GET",
         headers: this._headers
@@ -26,7 +26,7 @@ class Api {
 
     setNewCard(data) { // закинуть новую карточку на сервер
       this._headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
-      // console.log(`создание карточки- адрес- ${this._url}/${cardUrl}`);
+      // // console.log(`создание карточки- адрес- ${this._url}/${cardUrl}`);
       // console.dir(JSON.stringify(data));
       return fetch(`${this._url}/${cardUrl}`, {
         method: "POST",
@@ -49,7 +49,7 @@ class Api {
 
     getUserInfo() {  // вернет юзера с сервера     
       this._headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
-      // console.log('запрос на сервер с токеном', this._headers);
+      // // console.log('запрос на сервер с токеном', this._headers);
         return fetch(`${this._url}/${userUrl}`, {
             method: "GET",
             headers: this._headers
@@ -58,7 +58,7 @@ class Api {
     }
 
     setUserInfo(data) {  // закинет юзера на сервер
-      console.log('API установки нового профиля');
+      // console.log('API установки нового профиля');
       this._headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
         return fetch(`${this._url}/${userUrl}`, {
             method: "PATCH",

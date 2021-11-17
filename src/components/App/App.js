@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import Header from "../Header/Header";
@@ -19,51 +19,56 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import "./App.css";
 
 function App() {
-  const [isRegistered, setRegistered] = useState(false);
+ // const [isRegistered, setRegistered] = useState(false);
 
   //---------------- Все загруженные карточки фильмов -------------
   const [isDownloadedMovies, setDownloadedMovies] = React.useState([]); // внешний список фильмов
   const [isMainMovies, setMainMovies] = React.useState([]); // список фильмов на внутреннем сервере
-
+  const [isErrMainMovies, setErrMainMovies] = React.useState(''); // проблемы на внутреннем сервере
+  const [isErrDownloadedMovies, setErrDownloadedMovies] = React.useState(''); // проблемы на внутреннем сервере
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
   const [loggedIn, setLoggedIn] = React.useState(false); // При авторизации будем перезаписывать юзера и переполучать токен
 
   useEffect(() => {
-    console.log("loggedIn:", loggedIn);
+    // console.log("loggedIn:", loggedIn);
     if (loggedIn) {
-      // console.log('запрос к апи за данными пользователя token=', localStorage.getItem('jwt'));
+      // // console.log('запрос к апи за данными пользователя token=', localStorage.getItem('jwt'));
       api
         .getUserInfo() // запрос к апи за данными пользователя
         .then((data) => {
-          console.log("данные пользователя от getUserInfo:", data);
+          // console.log("данные пользователя от getUserInfo:", data);
           setCurrentUser(data);
         })
         .catch((err) => {
-          console.log("ошибка получения данных пользователя", err);
+          // console.log("ошибка получения данных пользователя", err);
         });
 
       //--------------- Работа с фильмами ---------------
-      console.log("App-> Запрос фильмов");
+      // console.log("App-> Запрос фильмов");
       moviesApi // запрос всех фильмов с внешнего апи
         .getInitialCards()
         .then((data) => {
           setDownloadedMovies(data);
-          console.log("App-> Данные с внешними фильмами пришли:"); // выполняется до загрузки массива
+          setErrDownloadedMovies('');
+          // console.log("App-> Данные с внешними фильмами пришли:"); // выполняется до загрузки массива
         })
         .catch((err) => {
-          console.log("данные не пришли:", err);
+          // console.log("App-> данные внешними фильмами не пришли:", err);
+          setErrDownloadedMovies(chekErrorType(err));
         });
 
       mainApi // запрос всех фильмов всех пользователей со своего апи! Переделать сервер
         .getInitialCards()
         .then((data) => {
-          console.log("App-> фильмы с моего сервера пришли:");
+          // console.log("App-> фильмы с моего сервера пришли:");
           setMainMovies(data);
-          //  console.log("Данные пришли:", isMainMovies); // выполняется до загрузки массива
+          setErrMainMovies('');
+          //  // console.log("Данные пришли:", isMainMovies); // выполняется до загрузки массива
         })
         .catch((err) => {
-          console.log("данные не пришли:", err);
+          // console.log("App-> данные с моего сервера не пришли:", err);
+          setErrMainMovies(chekErrorType(err));
         });
     }
   }, [loggedIn]);
@@ -85,7 +90,7 @@ function App() {
       .login({ email, password })
       .then((res) => {
         const token = res.token;
-        //        console.log("авторизация. токен от сервера такой:", token);
+        //        // console.log("авторизация. токен от сервера такой:", token);
         if (!!token) {
           // если токен от сервера пришел
           localStorage.setItem("jwt", token);
@@ -95,7 +100,7 @@ function App() {
         } else {
           // вешаем окошко ошибки авторизации
           setLoginRec("Токен от сервера не пришел");
-          console.log("Токен от сервера не пришел");
+          // console.log("Токен от сервера не пришел");
         }
       })
       .catch((err) => {
@@ -128,7 +133,7 @@ function App() {
     setLoggedIn(false); // разобраться, почему App загружается дважды и сам скидывает логин
     localStorage.removeItem("jwt"); // убиваем токен
     history.push("/signin"); // заново на авторизацию
-    // console.log('убили токен, ушли на регистрацию, loggedIn=', loggedIn);
+    // // console.log('убили токен, ушли на регистрацию, loggedIn=', loggedIn);
   }
 
   //------------- работа с токеном  ----------------
@@ -142,11 +147,11 @@ function App() {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
       // если токен есть, проверим его
-      // console.log('токен:', jwt);
+      // // console.log('токен:', jwt);
       auth
         .checkToken(jwt)
         .then((res) => {
-          // console.log('при получении токена', res);
+          // // console.log('при получении токена', res);
           if (res.data.email) {
             // если в ответе есть емэйл, считаем токен живым
             setLoggedIn(true); // разрешаем вход на защищаемый роут <----------
@@ -154,12 +159,12 @@ function App() {
             history.push("/");
           } else {
             setLoggedIn(false); // запрет на вход
-            // console.log('проблемы с токеном:');
+            // // console.log('проблемы с токеном:');
             history.push("/signin");
           }
         })
         .catch((err) => {
-          // console.log('ошибка проверки токена:', err);
+          // // console.log('ошибка проверки токена:', err);
           setLoggedIn(false); // запрет на вход
           history.push("/signin"); // на повторную авторизацию
         });
@@ -181,12 +186,12 @@ function App() {
   }
   function onUpdateProfile({ email, name }) {
     setProfileSending(true);
-    //  console.log("Запрос patch на изменение профиля", email, name);
+    //  // console.log("Запрос patch на изменение профиля", email, name);
     setProfileRec(""); // сбросить сообщение об ошибке
     api
       .setUserInfo({ name, email })
       .then((newUserData) => {
-        console.log("Профиль обновлен-", newUserData);
+        // console.log("Профиль обновлен-", newUserData);
         //    history.push("/"); // на главную
         setCurrentUser(newUserData);
         setEmail(email);
@@ -194,7 +199,7 @@ function App() {
         setProfileRec(""); // сбросить сообщение об ошибке
       })
       .catch((err) => {
-        console.log("Ошибка обновления профиля:", err);
+        // console.log("Ошибка обновления профиля:", err);
         setProfileRec(chekErrorType(err));
       })
       .finally(() => {
@@ -204,8 +209,8 @@ function App() {
 
   function clickExit() {
     onExit();
-    console.log("выйти из аккаунта", isRegistered);
-    setRegistered(false);
+    // console.log("выйти из аккаунта", isRegistered);
+  //  setRegistered(false);
   }
 
   //------------------- концепция перерисовки фильмов  по двум основным массивам ------------- !!!!!!!
@@ -220,7 +225,7 @@ function App() {
       item.trailer = item.trailerLink;
       isMainMovies.forEach((data) => {
       //  data.id = data.moveId;
-      //  console.log('App-> перебор фильмов. id=', item.id, ' movieId=', data.movieId);
+      //  // console.log('App-> перебор фильмов. id=', item.id, ' movieId=', data.movieId);
         if (data.movieId == item.id) {
           // если в сохраненных есть такой moveId - добавим поля
           item.like = true; // проставим флажок лайка-сохраненного
@@ -228,8 +233,8 @@ function App() {
         }
       });
     });
-    console.log('App-> пересортировка по изменению сохраненных фильмов:');
-//    console.log('App-> сохраненные фильмы:', isMainMovies);
+    // console.log('App-> пересортировка по изменению сохраненных фильмов:');
+//    // console.log('App-> сохраненные фильмы:', isMainMovies);
     setDownloadedMovies(resortedArray); // новый массив. ожидаем рендер
   }, [isMainMovies, isDownloadedMovies.length]);
 
@@ -250,6 +255,7 @@ function App() {
                 isDownloadedMovies={isDownloadedMovies} // все загруженные фильмы с внешнего сервера
                 isMainMovies={isMainMovies} // массив сохраненных фильмов
                 setMainMovies={setMainMovies}
+                isErrDownloadedMovies={isErrDownloadedMovies}
               />
               <Footer />
             </Route>
@@ -260,6 +266,7 @@ function App() {
               <SavedMovies
                 isMainMovies={isMainMovies} // пока выдадим все сохраненные
                 setMainMovies={setMainMovies} // заменить на setMainMovies
+                isErrMainMovies={isErrMainMovies} // сообщение об ошибке сервера
               />
               <Footer />
             </Route>
