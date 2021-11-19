@@ -21,20 +21,25 @@ function MoviesCardList({
 
   function handleChangeSearch(event) {
     //    event.preventDefault();
-    setflagEmptyReq(false);
+    //    !event.target.value ? setflagEmptyReq(true): setflagEmptyReq(false);
     setSearchString(event.target.value);
+    //    console.log("MoviesCardList-> ввели строку поиска:", !event.target.value);
   }
 
   function onFindMovies(event) {
     event.preventDefault();
 
-    isSearchString === "" ? setflagEmptyReq(true) : setflagEmptyReq(false);
+    if (isSearchString === "") {
+      setflagEmptyReq(true);
+    } else {
+      setflagEmptyReq(false);
+      onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
+    }
     // console.log(
     //   "MoviesCardList-> был сделан запрос к регулярке:",
     //   isSearchString,
     //   isflagEmptyReq
     // );
-    onGetMovies(isSearchString); // вызвать поисковик с запросом isSearchString
   }
 
   function toggleSelector() {
@@ -52,20 +57,19 @@ function MoviesCardList({
           onChange={handleChangeSearch}
         />
         <button
-          className={`movies__button-find ${
-            !!isErrMovies && "movies__button-find_disabled"
-          }`}
+          className="movies__button-find"
+          // className={`movies__button-find ${
+          //   !!isErrMovies && "movies__button-find_disabled"
+          // }`}
           type="submit"
           onClick={onFindMovies}
-          disabled={!!isErrMovies}
+          //  disabled={!!isErrMovies}
         >
           Поиск
         </button>
       </form>
       {isflagEmptyReq && (
-        <span className="movies__text movies__text_empty">
-          Пустой запрос. Выданы все фильмы!
-        </span>
+        <span className="movies__text movies__text_empty">Пустой запрос.</span>
       )}
 
       <span className="movies__text movies__text_empty">{isErrMovies}</span>

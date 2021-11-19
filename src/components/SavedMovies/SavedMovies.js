@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "../SavedMovies/SavedMovies.css";
 import "../Form/Form.css";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
@@ -6,18 +6,24 @@ import { mainApi } from "../../utils/MainApi"; // апи для пользова
 import { getMoviesFromArray } from "../../utils/found"; // поисковик по регулярке
 import { SHORT_FILM_DURATION } from "../../utils/constants";
 
-function SavedMovies({ isMainMovies, setMainMovies, isErrMainMovies }) {
+function SavedMovies({ isMainMovies, setMainMovies, isErrMainMovies, setErrMainMovies }) {
   const [isShortFilm, setShortFilm] = useState(false);
-  const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
-  const [isAllFoundMovies, setAllFoundMovies] = React.useState([]);
+  const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); 
+  const [isAllFoundMovies, setAllFoundMovies] = React.useState(isMainMovies); // в первую выдачу все фильмы
   const [isShortFoundMovies, setShortFoundMovies] = React.useState([]);
   const [isLoading, setLoading] = useState(false); // для прелоадера
   function onGetSavedMovies(searchString) {
     // по кнопке ПОИСК на вкладке ФИЛЬМЫ
     setLoading(true); // включить прелоадер
     const arrFoundMovies = getMoviesFromArray(searchString, isMainMovies);
+    if (!arrFoundMovies[0]){
+       setErrMainMovies('Ничего не найдено');
+    }
+    else{
+       setErrMainMovies('');
+    }
     setAllFoundMovies(arrFoundMovies); // ищем все фильмы несмотря на длительность
-    // console.log("SavedMovies-> флаг коротких фильмов:", isShortFilm);
+    console.log("SavedMovies-> флаг коротких фильмов:", isShortFilm);
     let arrShortMovies = [];
     arrFoundMovies.forEach((item) => {
       // console.log("SavedMovies-> длительность:", item.duration);
@@ -32,7 +38,34 @@ function SavedMovies({ isMainMovies, setMainMovies, isErrMainMovies }) {
   }
 
   useEffect(() => {
-    // console.log("SavedMovies-> Найденные фильмы:", isDisplayedMovies);
+    let arrMainMovies = isMainMovies.slice();
+    console.log(
+      "SavedMovies-> открываем страницу. Первая загрузка:",
+      arrMainMovies,
+      !isDisplayedMovies[0],
+      !!arrMainMovies[0]
+    );
+    if (!isDisplayedMovies[0] && !!arrMainMovies[0]) {
+      console.log(
+        "SavedMovies-> загружаем в isDisplayedMovies все фильмы с сервера:"
+      );
+      setAllFoundMovies(arrMainMovies);
+      setDisplayedMovies(arrMainMovies);
+      let arrShortMovies = [];
+      arrMainMovies.forEach((item) => {
+        // console.log("SavedMovies-> длительность:", item.duration);
+        if (item.duration < SHORT_FILM_DURATION) arrShortMovies.push(item);
+      });
+      console.log("SavedMovies-> короткометражки:", arrShortMovies);
+      setShortFoundMovies(arrShortMovies); // массив короткометражек
+      isShortFilm
+        ? setDisplayedMovies(arrShortMovies)
+        : setDisplayedMovies(arrMainMovies);
+    }
+  }, [isMainMovies]);
+
+  useEffect(() => {
+    console.log("SavedMovies-> Найденные фильмы:", isDisplayedMovies);
     setLoading(false); // выключить прелоадер
   }, [isDisplayedMovies]);
 

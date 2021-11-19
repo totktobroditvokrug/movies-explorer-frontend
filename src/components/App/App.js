@@ -256,6 +256,7 @@ function App() {
                 isMainMovies={isMainMovies} // массив сохраненных фильмов
                 setMainMovies={setMainMovies}
                 isErrDownloadedMovies={isErrDownloadedMovies}
+                setErrDownloadedMovies={setErrDownloadedMovies}
               />
               <Footer />
             </Route>
@@ -267,6 +268,7 @@ function App() {
                 isMainMovies={isMainMovies} // пока выдадим все сохраненные
                 setMainMovies={setMainMovies} // заменить на setMainMovies
                 isErrMainMovies={isErrMainMovies} // сообщение об ошибке сервера
+                setErrMainMovies={setErrMainMovies}
               />
               <Footer />
             </Route>

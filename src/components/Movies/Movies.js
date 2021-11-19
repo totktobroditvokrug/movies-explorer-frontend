@@ -12,7 +12,7 @@ import {
   SHORT_FILM_DURATION,
 } from "../../utils/constants";
 
-function Movies({ isDownloadedMovies, isMainMovies, setMainMovies, isErrDownloadedMovies }) {
+function Movies({ isDownloadedMovies, isMainMovies, setMainMovies, isErrDownloadedMovies, setErrDownloadedMovies }) {
   const currentUser = React.useContext(CurrentUserContext);
   const [isDisplayedMovies, setDisplayedMovies] = React.useState([]); // будем выводить по кнопке ЕЩЕ
   const [isFoundMovies, setFoundMovies] = React.useState([]); // найденные поиском  с довесом like и _id
@@ -24,6 +24,12 @@ function Movies({ isDownloadedMovies, isMainMovies, setMainMovies, isErrDownload
     setLoading(true); // включить прелоадер
     // по кнопке ПОИСК на вкладке ФИЛЬМЫ
     const arrFoundMovies = getMoviesFromArray(searchString, isDownloadedMovies);
+    if (!arrFoundMovies[0]){
+       setErrDownloadedMovies('Ничего не найдено');
+    }
+    else{
+      setErrDownloadedMovies('');
+   }
     setAllFoundMovies(arrFoundMovies); // ищем все фильмы несмотря на длительность
     // console.log("Movies-> флаг коротких фильмов:", isShortFilm);
     let arrShortMovies = [];
