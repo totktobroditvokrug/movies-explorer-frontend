@@ -19,13 +19,13 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import "./App.css";
 
 function App() {
- // const [isRegistered, setRegistered] = useState(false);
+  // const [isRegistered, setRegistered] = useState(false);
 
   //---------------- Все загруженные карточки фильмов -------------
   const [isDownloadedMovies, setDownloadedMovies] = React.useState([]); // внешний список фильмов
   const [isMainMovies, setMainMovies] = React.useState([]); // список фильмов на внутреннем сервере
-  const [isErrMainMovies, setErrMainMovies] = React.useState(''); // проблемы на внутреннем сервере
-  const [isErrDownloadedMovies, setErrDownloadedMovies] = React.useState(''); // проблемы на внутреннем сервере
+  const [isErrMainMovies, setErrMainMovies] = React.useState(""); // проблемы на внутреннем сервере
+  const [isErrDownloadedMovies, setErrDownloadedMovies] = React.useState(""); // проблемы на внутреннем сервере
   //---------- состояния и обработчики пользователя
   const [currentUser, setCurrentUser] = React.useState({ data: {} });
   const [loggedIn, setLoggedIn] = React.useState(false); // При авторизации будем перезаписывать юзера и переполучать токен
@@ -50,7 +50,7 @@ function App() {
         .getInitialCards()
         .then((data) => {
           setDownloadedMovies(data);
-          setErrDownloadedMovies('');
+          setErrDownloadedMovies("");
           // console.log("App-> Данные с внешними фильмами пришли:"); // выполняется до загрузки массива
         })
         .catch((err) => {
@@ -63,7 +63,7 @@ function App() {
         .then((data) => {
           // console.log("App-> фильмы с моего сервера пришли:");
           setMainMovies(data);
-          setErrMainMovies('');
+          setErrMainMovies("");
           //  // console.log("Данные пришли:", isMainMovies); // выполняется до загрузки массива
         })
         .catch((err) => {
@@ -177,6 +177,7 @@ function App() {
   const [isProfileRec, setProfileRec] = React.useState(""); // сообщение сервера
   function onEditProfileMode() {
     setEditProfileMode(true);
+    setProfileRec(""); // сбросить сообщение об ошибке
   }
   function offEditProfileMode() {
     setEditProfileMode(false);
@@ -196,7 +197,7 @@ function App() {
         setCurrentUser(newUserData);
         setEmail(email);
         setEditProfileMode(false); // снять режим редактирования только при удачном обращении
-        setProfileRec(""); // сбросить сообщение об ошибке
+        setProfileRec("Профиль успешно обновлен."); // сообщение об изменении профиля
       })
       .catch((err) => {
         // console.log("Ошибка обновления профиля:", err);
@@ -210,7 +211,7 @@ function App() {
   function clickExit() {
     onExit();
     // console.log("выйти из аккаунта", isRegistered);
-  //  setRegistered(false);
+    //  setRegistered(false);
   }
 
   //------------------- концепция перерисовки фильмов  по двум основным массивам ------------- !!!!!!!
@@ -224,8 +225,8 @@ function App() {
       // if (!!item.image.url) item.image = item.image.url;
       item.trailer = item.trailerLink;
       isMainMovies.forEach((data) => {
-      //  data.id = data.moveId;
-      //  // console.log('App-> перебор фильмов. id=', item.id, ' movieId=', data.movieId);
+        //  data.id = data.moveId;
+        //  // console.log('App-> перебор фильмов. id=', item.id, ' movieId=', data.movieId);
         if (data.movieId === item.id) {
           // если в сохраненных есть такой moveId - добавим поля
           item.like = true; // проставим флажок лайка-сохраненного
@@ -234,7 +235,7 @@ function App() {
       });
     });
     // console.log('App-> пересортировка по изменению сохраненных фильмов:');
-//    // console.log('App-> сохраненные фильмы:', isMainMovies);
+    //    // console.log('App-> сохраненные фильмы:', isMainMovies);
     setDownloadedMovies(resortedArray); // новый массив. ожидаем рендер
   }, [isMainMovies, isDownloadedMovies.length]);
 
@@ -249,44 +250,38 @@ function App() {
             <Footer />
           </Route>
           <ProtectedRoute path="/movies" loggedIn={loggedIn}>
-            <Route path="/movies">
-              <Header email={email} />
-              <Movies
-                isDownloadedMovies={isDownloadedMovies} // все загруженные фильмы с внешнего сервера
-                isMainMovies={isMainMovies} // массив сохраненных фильмов
-                setMainMovies={setMainMovies}
-                isErrDownloadedMovies={isErrDownloadedMovies}
-                setErrDownloadedMovies={setErrDownloadedMovies}
-              />
-              <Footer />
-            </Route>
+            <Header email={email} />
+            <Movies
+              isDownloadedMovies={isDownloadedMovies} // все загруженные фильмы с внешнего сервера
+              isMainMovies={isMainMovies} // массив сохраненных фильмов
+              setMainMovies={setMainMovies}
+              isErrDownloadedMovies={isErrDownloadedMovies}
+              setErrDownloadedMovies={setErrDownloadedMovies}
+            />
+            <Footer />
           </ProtectedRoute>
           <ProtectedRoute path="/saved-movies" loggedIn={loggedIn}>
-            <Route path="/saved-movies">
-              <Header email={email} />
-              <SavedMovies
-                isMainMovies={isMainMovies} // пока выдадим все сохраненные
-                setMainMovies={setMainMovies} // заменить на setMainMovies
-                isErrMainMovies={isErrMainMovies} // сообщение об ошибке сервера
-                setErrMainMovies={setErrMainMovies}
-              />
-              <Footer />
-            </Route>
+            <Header email={email} />
+            <SavedMovies
+              isMainMovies={isMainMovies} // пока выдадим все сохраненные
+              setMainMovies={setMainMovies} // заменить на setMainMovies
+              isErrMainMovies={isErrMainMovies} // сообщение об ошибке сервера
+              setErrMainMovies={setErrMainMovies}
+            />
+            <Footer />
           </ProtectedRoute>
           <ProtectedRoute path="/profile" loggedIn={loggedIn}>
-            <Route path="/profile">
-              <Header email={email} />
-              <Profile
-                clickExit={clickExit}
-                onUpdateProfile={onUpdateProfile}
-                isSending={isProfileSending}
-                isEditProfileMode={isEditProfileMode}
-                onEditProfileMode={onEditProfileMode}
-                offEditProfileMode={offEditProfileMode}
-                errStatus={isProfileRec}
-                resetErrorStatus={resetErrorStatusProfile}
-              ></Profile>
-            </Route>
+            <Header email={email} />
+            <Profile
+              clickExit={clickExit}
+              onUpdateProfile={onUpdateProfile}
+              isSending={isProfileSending}
+              isEditProfileMode={isEditProfileMode}
+              onEditProfileMode={onEditProfileMode}
+              offEditProfileMode={offEditProfileMode}
+              errStatus={isProfileRec}
+              resetErrorStatus={resetErrorStatusProfile}
+            ></Profile>
           </ProtectedRoute>
           <Route path="/signup">
             <Register

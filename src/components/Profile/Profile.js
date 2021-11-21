@@ -29,9 +29,11 @@ function Profile({
     offEditProfileMode();
         resetErrorStatus();
   }, []);
-  useEffect(() => {  // при повторных заходах на страницу скидывать режим редактирования
+  useEffect(() => {
     setEmail(currentUser.data.email);
     setName(currentUser.data.name);
+    setNameIdentical(true);
+    setEmailIdentical(true);
   }, [isEditProfileMode]);
   const handleChangeName = (evt) => {
 //    console.log('Validation-> меняем имя:', evt.target.value);

@@ -19,7 +19,6 @@ export function useFormWithValidation() {
   const [isValid, setIsValid] = React.useState(false);
 
   const handleChange = (evt) => {
-    console.log('Validation-> evt:', evt);
     const input = evt.target;
     const value = input.value;
     const name = input.name;
