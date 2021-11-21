@@ -1,0 +1,10 @@
+.logo{
+    align-content: flex-start;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    margin-right: 28px;
+}
+.logo:hover{
+    opacity: 0.8;
+}

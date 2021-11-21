@@ -1,0 +1,103 @@
+.cards{
+    display: flex;
+    flex-direction: column;
+}
+
+.card{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    background-color: #F4F4F4;
+    margin-top: 40px;
+}
+
+.card__wrapp{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-left: 22px;
+}
+
+.card__description{
+    display: block;
+}
+
+.card__title{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 22px;
+}
+
+.card__duration{
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: left;
+    margin-top: 13px;
+    margin-bottom: 30px;
+    color: #A0A0A0;
+}
+
+.card__button{
+    width: 14px;
+    height: 12px;
+    background: transparent url('../../images/button_type_dislike.svg') center no-repeat;
+    border: none;
+    cursor: pointer;
+    margin: 0px;
+    margin-bottom: 22px;
+}
+.card__button:hover{
+    opacity: 0.7;
+}
+.card__button_like{
+    background: transparent url('../../images/button_type_like.svg') center no-repeat;
+}
+.card__button_delete{
+    background: transparent url('../../images/button_type_delete.svg') center no-repeat;
+}
+.card__poster{
+    width: 220px;
+    min-height: 120px;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 6px;
+    transition: linear 0.3s;
+}
+.card__poster:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+@media screen and (max-width: 770px) {
+
+}
+
+@media screen and (max-width: 600px) {
+    .card{
+        flex-direction: column-reverse;
+        margin-top: 20px;
+    }
+    .card__wrapp{
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: 12px;
+    }
+    .card__poster{
+        padding: 0;
+        width: 100%;
+        min-height: 120px;
+    }
+    .card__duration{
+        margin-top: 8px;
+        margin-bottom: 14px;
+    }
+    .card__button{
+        margin: 16px;
+    }
+}
